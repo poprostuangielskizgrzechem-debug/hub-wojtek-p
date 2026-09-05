@@ -2935,7 +2935,7 @@
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
-                statusEl.textContent = 'Zapisano — teraz wyślij ten obrazek nauczycielowi.';
+                statusEl.textContent = 'Zapisano - teraz wyślij ten obrazek nauczycielowi.';
             } catch (e) {
                 statusEl.textContent = 'Nie udało się zapisać obrazka.';
             }
@@ -2954,7 +2954,7 @@
         function shareResultOnly(xp, maxXP, pct, badgeClass, message) {
             var statusEl = document.getElementById('tg-share-status');
             if (!navigator.canShare) {
-                statusEl.textContent = 'Udostępnianie niedostępne w tej przeglądarce — użyj przycisku Zapisz i wyślij ręcznie.';
+                statusEl.textContent = 'Udostępnianie niedostępne w tej przeglądarce - użyj przycisku Zapisz i wyślij ręcznie.';
                 return;
             }
             generateResultCanvas(xp, maxXP, pct, badgeClass, message, statusEl).then(function (canvas) {
@@ -2967,14 +2967,14 @@
                         navigator.share({
                             files: [file],
                             title: 'Wynik testu',
-                            text: (CONFIG.title || '') + ' — ' + (CONFIG.subtitle || '') + ': ' + xp + '/' + maxXP + ' XP (' + pct + '%)'
+                            text: (CONFIG.title || '') + ' - ' + (CONFIG.subtitle || '') + ': ' + xp + '/' + maxXP + ' XP (' + pct + '%)'
                         }).then(function () {
                             statusEl.textContent = 'Wysłano.';
                         }).catch(function () {
-                            statusEl.textContent = 'Udostępnianie anulowane lub nieudane — użyj przycisku Zapisz i wyślij ręcznie.';
+                            statusEl.textContent = 'Udostępnianie anulowane lub nieudane - użyj przycisku Zapisz i wyślij ręcznie.';
                         });
                     } else {
-                        statusEl.textContent = 'Udostępnianie niedostępne w tej przeglądarce — użyj przycisku Zapisz i wyślij ręcznie.';
+                        statusEl.textContent = 'Udostępnianie niedostępne w tej przeglądarce - użyj przycisku Zapisz i wyślij ręcznie.';
                     }
                 }, 'image/png');
             }).catch(function () {
