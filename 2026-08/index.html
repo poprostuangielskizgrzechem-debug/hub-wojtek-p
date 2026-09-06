@@ -1037,6 +1037,7 @@
                     </div>
 
                     <div class="hub-footer">
+                        <button type="button" class="hub-link-btn" id="hub-verbs-reroll">&#127922; Losuj inny zestaw</button>
                         <button type="button" class="hub-link-btn" id="hub-verbs-reset">Resetuj post&#281;p</button>
                         <button type="button" class="hub-link-btn" data-hub-nav="home">&larr; Powr&oacute;t</button>
                     </div>
@@ -3838,9 +3839,28 @@
             resetVerbsToSetup();
         }
 
+        /** Nowy losowy zestaw z aktualnego (lub wlasnie wybranego na ekranie
+         *  startowym) zakresu gwiazdek, bez ruszania zapisanego postepu "umiem" -
+         *  w odroznieniu od resetVerbsProgress. Dziala z obu ekranow, zeby nie trzeba
+         *  bylo klikac "Zaczynamy" tylko po to, zeby dostac sie do "Nowa runda". */
+        function rerollVerbSet() {
+            var setup = el('hub-verbs-setup');
+            if (setup && !setup.classList.contains('hidden')) {
+                var tiers = selectedTierValues();
+                if (!tiers) { window.alert('Zaznacz przynajmniej jeden zakres gwiazdek.'); return; }
+                verbSelectedTiers = tiers;
+                setup.classList.add('hidden');
+                el('hub-verbs-session').classList.remove('hidden');
+            }
+            startVerbRound();
+        }
+
         function wireVerbs() {
             var start = el('hub-verbs-start');
             if (start) start.addEventListener('click', function () { start.blur(); startVerbSession(); });
+
+            var reroll = el('hub-verbs-reroll');
+            if (reroll) reroll.addEventListener('click', function () { reroll.blur(); rerollVerbSet(); });
 
             var reset = el('hub-verbs-reset');
             if (reset) reset.addEventListener('click', function () { reset.blur(); resetVerbsProgress(); });
