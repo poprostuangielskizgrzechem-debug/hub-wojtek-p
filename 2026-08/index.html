@@ -576,6 +576,13 @@
 
       /* --- czasowniki nieregularne --- */
       .hub-shell-wide { max-width:860px; }
+      .hub-verbs-legend { background:var(--hub-paper); border:1px solid var(--hub-line); border-radius:12px;
+                          padding:14px 18px; margin-bottom:20px; }
+      .hub-verbs-legend-title { font-family:'Plus Jakarta Sans', Arial, sans-serif; font-size:11px; font-weight:800;
+                                text-transform:uppercase; letter-spacing:.8px; color:var(--hub-muted); margin:0 0 10px; }
+      .hub-verbs-legend-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px;
+                               font-size:13.5px; color:var(--hub-ink); }
+      .hub-verbs-stars { display:inline-block; min-width:92px; color:var(--hub-accent); letter-spacing:1px; }
       .hub-verbs-intro { font-size:13.5px; color:var(--hub-muted); text-align:center; margin:0 0 18px; }
       .hub-verb-row { border:1px solid var(--hub-line); border-radius:12px; padding:12px 14px; margin-bottom:10px;
                       display:grid; grid-template-columns:150px repeat(3, minmax(0,1fr)); gap:10px; align-items:start; }
@@ -977,6 +984,9 @@
         </section>
         <!-- === HUB MODULE - END (sentences view) === -->
         <!-- === HUB MODULE - START (verbs view) === -->
+        <!-- Ekran startowy (#hub-verbs-setup) wzorowany na #fc-setup z fiszek: legenda +
+             checkboxy #hub-verbs-tier-chips zamiast lekcji, przycisk startu. Sesja
+             (#hub-verbs-session) to dawna zawartosc widoku bez zmian w markupie tabeli. -->
         <section id="hub-verbs-view" class="hidden no-print flex-grow flex items-start justify-center relative z-20">
             <div class="hub-shell hub-shell-wide">
                 <div class="hub-topbar"></div>
@@ -987,21 +997,47 @@
                         <p class="hub-tagline">Masz polskie znaczenie. Uzupe&#322;nij trzy formy, potem sprawd&#378; si&#281;.</p>
                     </div>
 
-                    <p id="hub-verbs-intro" class="hub-verbs-intro"></p>
+                    <div id="hub-verbs-setup">
+                        <div class="hub-verbs-legend">
+                            <p class="hub-verbs-legend-title">Co oznaczaj&#261; gwiazdki</p>
+                            <ul class="hub-verbs-legend-list">
+                                <li><span class="hub-verbs-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> najcz&#281;&#347;ciej u&#380;ywane, poziom podstawowy</li>
+                                <li><span class="hub-verbs-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span> bardzo cz&#281;ste, codzienne</li>
+                                <li><span class="hub-verbs-stars">&#9733;&#9733;&#9733;&#9734;&#9734;</span> &#347;rednio zaawansowane, rzadsze</li>
+                                <li><span class="hub-verbs-stars">&#9733;&#9733;&#9734;&#9734;&#9734;</span> zaawansowane, rzadkie</li>
+                                <li><span class="hub-verbs-stars">&#9733;&#9734;&#9734;&#9734;&#9734;</span> bardzo rzadkie, archaiczne / literackie</li>
+                            </ul>
+                        </div>
 
-                    <div id="hub-verbs-table"></div>
+                        <p class="hub-section-title">Kt&oacute;ry zakres &#263;wiczyć</p>
+                        <div class="hub-chips" id="hub-verbs-tier-chips">
+                            <label class="hub-chip"><input type="checkbox" name="verb-tier" value="5" checked><span>&#9733;&#9733;&#9733;&#9733;&#9733;</span></label>
+                            <label class="hub-chip"><input type="checkbox" name="verb-tier" value="4" checked><span>&#9733;&#9733;&#9733;&#9733;&#9734;</span></label>
+                            <label class="hub-chip"><input type="checkbox" name="verb-tier" value="3" checked><span>&#9733;&#9733;&#9733;&#9734;&#9734;</span></label>
+                            <label class="hub-chip"><input type="checkbox" name="verb-tier" value="2" checked><span>&#9733;&#9733;&#9734;&#9734;&#9734;</span></label>
+                            <label class="hub-chip"><input type="checkbox" name="verb-tier" value="1" checked><span>&#9733;&#9734;&#9734;&#9734;&#9734;</span></label>
+                        </div>
 
-                    <div class="hub-verbs-actions">
-                        <button type="button" class="hub-cta hub-cta-check" id="hub-verbs-check">SPRAWD&#377;</button>
-                        <button type="button" class="hub-cta hub-cta-alt hidden" id="hub-verbs-retry">&#128260; Popraw b&#322;&#281;dy</button>
-                        <button type="button" class="hub-cta hub-cta-alt hidden" id="hub-verbs-new">&#127922; Nowa runda</button>
+                        <button type="button" class="hub-cta hub-cta-check" id="hub-verbs-start" style="width:100%">Zaczynamy</button>
                     </div>
-                    <p class="hub-share-status" id="hub-verbs-status"></p>
 
-                    <div id="hub-verbs-summary" class="hidden"></div>
+                    <div id="hub-verbs-session" class="hidden">
+                        <p id="hub-verbs-intro" class="hub-verbs-intro"></p>
+
+                        <div id="hub-verbs-table"></div>
+
+                        <div class="hub-verbs-actions">
+                            <button type="button" class="hub-cta hub-cta-check" id="hub-verbs-check">SPRAWD&#377;</button>
+                            <button type="button" class="hub-cta hub-cta-alt hidden" id="hub-verbs-retry">&#128260; Popraw b&#322;&#281;dy</button>
+                            <button type="button" class="hub-cta hub-cta-alt hidden" id="hub-verbs-new">&#127922; Nowa runda</button>
+                        </div>
+                        <p class="hub-share-status" id="hub-verbs-status"></p>
+
+                        <div id="hub-verbs-summary" class="hidden"></div>
+                    </div>
 
                     <div class="hub-footer">
-                        <button type="button" class="hub-link-btn" id="hub-verbs-reroll">&#127922; Inne czasowniki</button>
+                        <button type="button" class="hub-link-btn" id="hub-verbs-reset">Resetuj post&#281;p</button>
                         <button type="button" class="hub-link-btn" data-hub-nav="home">&larr; Powr&oacute;t</button>
                     </div>
 
@@ -1373,6 +1409,7 @@
         "monthCount": 1,
         "teacherWhatsApp": "48880227282",
         "storageKey": "hub_wojtek-p_2026-08",
+        "studentKey": "hub_wojtek-p",
         "stamp": "aktualizacja po lekcji 4, 3.09.2026",
         "lastLessonPhrase": "lekcji 4",
         "lessons": [
@@ -1638,178 +1675,8 @@
                         "pos": "sent"
                 }
         ],
-        "verbs": [
-                {
-                        "pl": "znaleźć, znajdować",
-                        "base": [
-                                "find"
-                        ],
-                        "past": [
-                                "found"
-                        ],
-                        "participle": [
-                                "found"
-                        ],
-                        "source": "lekcja",
-                        "current": true
-                },
-                {
-                        "pl": "mieć",
-                        "base": [
-                                "have"
-                        ],
-                        "past": [
-                                "had"
-                        ],
-                        "participle": [
-                                "had"
-                        ],
-                        "source": "lekcja",
-                        "current": true
-                },
-                {
-                        "pl": "czuć (się)",
-                        "base": [
-                                "feel"
-                        ],
-                        "past": [
-                                "felt"
-                        ],
-                        "participle": [
-                                "felt"
-                        ],
-                        "source": "lekcja",
-                        "current": true
-                },
-                {
-                        "pl": "iść, jechać",
-                        "base": [
-                                "go"
-                        ],
-                        "past": [
-                                "went"
-                        ],
-                        "participle": [
-                                "gone"
-                        ],
-                        "source": "dodany",
-                        "current": true
-                },
-                {
-                        "pl": "widzieć",
-                        "base": [
-                                "see"
-                        ],
-                        "past": [
-                                "saw"
-                        ],
-                        "participle": [
-                                "seen"
-                        ],
-                        "source": "dodany",
-                        "current": true
-                },
-                {
-                        "pl": "jeść",
-                        "base": [
-                                "eat"
-                        ],
-                        "past": [
-                                "ate"
-                        ],
-                        "participle": [
-                                "eaten"
-                        ],
-                        "source": "dodany",
-                        "current": true
-                },
-                {
-                        "pl": "brać, zabierać",
-                        "base": [
-                                "take"
-                        ],
-                        "past": [
-                                "took"
-                        ],
-                        "participle": [
-                                "taken"
-                        ],
-                        "source": "dodany",
-                        "current": true
-                },
-                {
-                        "pl": "robić, wykonywać",
-                        "base": [
-                                "make"
-                        ],
-                        "past": [
-                                "made"
-                        ],
-                        "participle": [
-                                "made"
-                        ],
-                        "source": "dodany",
-                        "current": true
-                },
-                {
-                        "pl": "dostawać, otrzymywać",
-                        "base": [
-                                "get"
-                        ],
-                        "past": [
-                                "got"
-                        ],
-                        "participle": [
-                                "got",
-                                "gotten"
-                        ],
-                        "source": "dodany",
-                        "current": true
-                },
-                {
-                        "pl": "dawać",
-                        "base": [
-                                "give"
-                        ],
-                        "past": [
-                                "gave"
-                        ],
-                        "participle": [
-                                "given"
-                        ],
-                        "source": "dodany",
-                        "current": true
-                },
-                {
-                        "pl": "wiedzieć, znać",
-                        "base": [
-                                "know"
-                        ],
-                        "past": [
-                                "knew"
-                        ],
-                        "participle": [
-                                "known"
-                        ],
-                        "source": "dodany",
-                        "current": true
-                },
-                {
-                        "pl": "myśleć",
-                        "base": [
-                                "think"
-                        ],
-                        "past": [
-                                "thought"
-                        ],
-                        "participle": [
-                                "thought"
-                        ],
-                        "source": "dodany",
-                        "current": true
-                }
-        ],
-        "verbRoundSize": 10,
+        "priorityVerbs": [],
+        "verbRoundSize": 6,
         "sentencePool": [
                 "introduce yourself",
                 "DIY",
@@ -3003,8 +2870,12 @@
         var GRAMMAR = HUB.grammar || [];
         var HOMEWORK = HUB.homework || [];
         var PRONUNCIATION = HUB.pronunciation || [];
-        var VERBS = HUB.verbs || [];
-        var VERB_ROUND_SIZE = Math.min(HUB.verbRoundSize || 10, VERBS.length);
+        /* VERB_BANK_START */
+        // 167 czasownikow, zrodlo: Lista czasowników nieregularnych z podziałem na częstość stosowania.md, wygenerowano 2026-09-06T09:02:35.270Z
+        var VERB_BANK = [{"stars":5,"pl":"być","base":"be","past":["was","were"],"participle":["been"]},{"stars":5,"pl":"stawać się","base":"become","past":["became"],"participle":["become"]},{"stars":5,"pl":"zaczynać","base":"begin","past":["began"],"participle":["begun"]},{"stars":5,"pl":"łamać / psuć","base":"break","past":["broke"],"participle":["broken"]},{"stars":5,"pl":"przynosić","base":"bring","past":["brought"],"participle":["brought"]},{"stars":5,"pl":"budować","base":"build","past":["built"],"participle":["built"]},{"stars":5,"pl":"kupować","base":"buy","past":["bought"],"participle":["bought"]},{"stars":5,"pl":"łapać","base":"catch","past":["caught"],"participle":["caught"]},{"stars":5,"pl":"wybierać","base":"choose","past":["chose"],"participle":["chosen"]},{"stars":5,"pl":"przychodzić","base":"come","past":["came"],"participle":["come"]},{"stars":5,"pl":"robić","base":"do","past":["did"],"participle":["done"]},{"stars":5,"pl":"pić","base":"drink","past":["drank"],"participle":["drunk"]},{"stars":5,"pl":"prowadzić (pojazd)","base":"drive","past":["drove"],"participle":["driven"]},{"stars":5,"pl":"jeść","base":"eat","past":["ate"],"participle":["eaten"]},{"stars":5,"pl":"spadać","base":"fall","past":["fell"],"participle":["fallen"]},{"stars":5,"pl":"czuć","base":"feel","past":["felt"],"participle":["felt"]},{"stars":5,"pl":"znaleźć","base":"find","past":["found"],"participle":["found"]},{"stars":5,"pl":"latać","base":"fly","past":["flew"],"participle":["flown"]},{"stars":5,"pl":"zapominać","base":"forget","past":["forgot"],"participle":["forgotten"]},{"stars":5,"pl":"dostawać / docierać","base":"get","past":["got"],"participle":["got","gotten"]},{"stars":5,"pl":"dawać","base":"give","past":["gave"],"participle":["given"]},{"stars":5,"pl":"iść / jechać","base":"go","past":["went"],"participle":["gone"]},{"stars":5,"pl":"mieć","base":"have","past":["had"],"participle":["had"]},{"stars":5,"pl":"słyszeć","base":"hear","past":["heard"],"participle":["heard"]},{"stars":5,"pl":"trzymać / zatrzymywać","base":"keep","past":["kept"],"participle":["kept"]},{"stars":5,"pl":"wiedzieć / znać","base":"know","past":["knew"],"participle":["known"]},{"stars":5,"pl":"zostawiać / wychodzić","base":"leave","past":["left"],"participle":["left"]},{"stars":5,"pl":"robić / tworzyć","base":"make","past":["made"],"participle":["made"]},{"stars":5,"pl":"spotykać","base":"meet","past":["met"],"participle":["met"]},{"stars":5,"pl":"płacić","base":"pay","past":["paid"],"participle":["paid"]},{"stars":5,"pl":"kłaść","base":"put","past":["put"],"participle":["put"]},{"stars":5,"pl":"czytać","base":"read","past":["read"],"participle":["read"]},{"stars":5,"pl":"biegać","base":"run","past":["ran"],"participle":["run"]},{"stars":5,"pl":"mówić / powiedzieć","base":"say","past":["said"],"participle":["said"]},{"stars":5,"pl":"widzieć","base":"see","past":["saw"],"participle":["seen"]},{"stars":5,"pl":"sprzedawać","base":"sell","past":["sold"],"participle":["sold"]},{"stars":5,"pl":"wysyłać","base":"send","past":["sent"],"participle":["sent"]},{"stars":5,"pl":"stawiać / ustawiać","base":"set","past":["set"],"participle":["set"]},{"stars":5,"pl":"mówić (w języku)","base":"speak","past":["spoke"],"participle":["spoken"]},{"stars":5,"pl":"spędzać / wydawać","base":"spend","past":["spent"],"participle":["spent"]},{"stars":5,"pl":"brać","base":"take","past":["took"],"participle":["taken"]},{"stars":5,"pl":"mówić / opowiadać","base":"tell","past":["told"],"participle":["told"]},{"stars":5,"pl":"myśleć","base":"think","past":["thought"],"participle":["thought"]},{"stars":5,"pl":"rozumieć","base":"understand","past":["understood"],"participle":["understood"]},{"stars":5,"pl":"pisać","base":"write","past":["wrote"],"participle":["written"]},{"stars":4,"pl":"bić / pokonywać","base":"beat","past":["beat"],"participle":["beaten"]},{"stars":4,"pl":"giąć / zginać","base":"bend","past":["bent"],"participle":["bent"]},{"stars":4,"pl":"zakładać się","base":"bet","past":["bet"],"participle":["bet"]},{"stars":4,"pl":"gryźć","base":"bite","past":["bit"],"participle":["bitten"]},{"stars":4,"pl":"dmuchać","base":"blow","past":["blew"],"participle":["blown"]},{"stars":4,"pl":"kosztować","base":"cost","past":["cost"],"participle":["cost"]},{"stars":4,"pl":"ciąć","base":"cut","past":["cut"],"participle":["cut"]},{"stars":4,"pl":"zajmować się / rozdawać","base":"deal","past":["dealt"],"participle":["dealt"]},{"stars":4,"pl":"rysować / ciągnąć","base":"draw","past":["drew"],"participle":["drawn"]},{"stars":4,"pl":"śnić / marzyć","base":"dream","past":["dreamt","dreamed"],"participle":["dreamt","dreamed"]},{"stars":4,"pl":"karmić","base":"feed","past":["fed"],"participle":["fed"]},{"stars":4,"pl":"walczyć","base":"fight","past":["fought"],"participle":["fought"]},{"stars":4,"pl":"zamarzać","base":"freeze","past":["froze"],"participle":["frozen"]},{"stars":4,"pl":"rosnąć","base":"grow","past":["grew"],"participle":["grown"]},{"stars":4,"pl":"wisieć / wieszać","base":"hang","past":["hung"],"participle":["hung"]},{"stars":4,"pl":"chować","base":"hide","past":["hid"],"participle":["hidden"]},{"stars":4,"pl":"uderzać","base":"hit","past":["hit"],"participle":["hit"]},{"stars":4,"pl":"trzymać","base":"hold","past":["held"],"participle":["held"]},{"stars":4,"pl":"ranić / boleć","base":"hurt","past":["hurt"],"participle":["hurt"]},{"stars":4,"pl":"prowadzić / przewodzić","base":"lead","past":["led"],"participle":["led"]},{"stars":4,"pl":"pożyczać (komuś)","base":"lend","past":["lent"],"participle":["lent"]},{"stars":4,"pl":"pozwalać","base":"let","past":["let"],"participle":["let"]},{"stars":4,"pl":"leżeć","base":"lie","past":["lay"],"participle":["lain"]},{"stars":4,"pl":"tracić / zgubić","base":"lose","past":["lost"],"participle":["lost"]},{"stars":4,"pl":"znaczyć","base":"mean","past":["meant"],"participle":["meant"]},{"stars":4,"pl":"jeździć (np. konno)","base":"ride","past":["rode"],"participle":["ridden"]},{"stars":4,"pl":"dzwonić","base":"ring","past":["rang"],"participle":["rung"]},{"stars":4,"pl":"rosnąć / podnosić się","base":"rise","past":["rose"],"participle":["risen"]},{"stars":4,"pl":"potrząsać","base":"shake","past":["shook"],"participle":["shaken"]},{"stars":4,"pl":"świecić","base":"shine","past":["shone"],"participle":["shone"]},{"stars":4,"pl":"strzelać","base":"shoot","past":["shot"],"participle":["shot"]},{"stars":4,"pl":"pokazywać","base":"show","past":["showed"],"participle":["shown"]},{"stars":4,"pl":"zamykać","base":"shut","past":["shut"],"participle":["shut"]},{"stars":4,"pl":"śpiewać","base":"sing","past":["sang"],"participle":["sung"]},{"stars":4,"pl":"siedzieć","base":"sit","past":["sat"],"participle":["sat"]},{"stars":4,"pl":"spać","base":"sleep","past":["slept"],"participle":["slept"]},{"stars":4,"pl":"ślizgać się","base":"slide","past":["slid"],"participle":["slid"]},{"stars":4,"pl":"pachnieć / czuć zapach","base":"smell","past":["smelt","smelled"],"participle":["smelt","smelled"]},{"stars":4,"pl":"rozsypywać / rozprzestrzeniać","base":"spread","past":["spread"],"participle":["spread"]},{"stars":4,"pl":"kraść","base":"steal","past":["stole"],"participle":["stolen"]},{"stars":4,"pl":"pływać","base":"swim","past":["swam"],"participle":["swum"]},{"stars":4,"pl":"uczyć (kogoś)","base":"teach","past":["taught"],"participle":["taught"]},{"stars":4,"pl":"rzucać","base":"throw","past":["threw"],"participle":["thrown"]},{"stars":4,"pl":"budzić (się)","base":"wake","past":["woke"],"participle":["woken"]},{"stars":4,"pl":"wygrywać","base":"win","past":["won"],"participle":["won"]},{"stars":3,"pl":"pojawiać się / powstawać","base":"arise","past":["arose"],"participle":["arisen"]},{"stars":3,"pl":"obudzić","base":"awake","past":["awoke"],"participle":["awoken"]},{"stars":3,"pl":"znosić / rodzić","base":"bear","past":["bore"],"participle":["borne","born"]},{"stars":3,"pl":"wiązać","base":"bind","past":["bound"],"participle":["bound"]},{"stars":3,"pl":"krwawić","base":"bleed","past":["bled"],"participle":["bled"]},{"stars":3,"pl":"hodować / rozmnażać","base":"breed","past":["bred"],"participle":["bred"]},{"stars":3,"pl":"wybuchać / pękać","base":"burst","past":["burst"],"participle":["burst"]},{"stars":3,"pl":"rzucać / przydzielać role","base":"cast","past":["cast"],"participle":["cast"]},{"stars":3,"pl":"trzymać się kurczowo","base":"cling","past":["clung"],"participle":["clung"]},{"stars":3,"pl":"kopać (w ziemi)","base":"dig","past":["dug"],"participle":["dug"]},{"stars":3,"pl":"zabraniać","base":"forbid","past":["forbade"],"participle":["forbidden"]},{"stars":3,"pl":"wybaczać","base":"forgive","past":["forgave"],"participle":["forgiven"]},{"stars":3,"pl":"mleć","base":"grind","past":["ground"],"participle":["ground"]},{"stars":3,"pl":"klęczeć","base":"kneel","past":["knelt","kneeled"],"participle":["knelt","kneeled"]},{"stars":3,"pl":"robić na drutach","base":"knit","past":["knit","knitted"],"participle":["knit","knitted"]},{"stars":3,"pl":"kłaść / nakrywać","base":"lay","past":["laid"],"participle":["laid"]},{"stars":3,"pl":"skakać","base":"leap","past":["leapt","leaped"],"participle":["leapt","leaped"]},{"stars":3,"pl":"palić się / zapalać","base":"light","past":["lit"],"participle":["lit"]},{"stars":3,"pl":"mylić","base":"mistake","past":["mistook"],"participle":["mistaken"]},{"stars":3,"pl":"rezygnować / rzucać","base":"quit","past":["quit"],"participle":["quit"]},{"stars":3,"pl":"szukać","base":"seek","past":["sought"],"participle":["sought"]},{"stars":3,"pl":"szyć","base":"sew","past":["sewed"],"participle":["sewn","sewed"]},{"stars":3,"pl":"kurczyć się","base":"shrink","past":["shrank"],"participle":["shrunk"]},{"stars":3,"pl":"tonąć (o przedmiotach)","base":"sink","past":["sank"],"participle":["sunk"]},{"stars":3,"pl":"pluć","base":"spit","past":["spat"],"participle":["spat"]},{"stars":3,"pl":"dzielić / rozdzielać","base":"split","past":["split"],"participle":["split"]},{"stars":3,"pl":"skakać / wypływać","base":"spring","past":["sprang"],"participle":["sprung"]},{"stars":3,"pl":"śmierdzieć","base":"stink","past":["stank"],"participle":["stunk"]},{"stars":3,"pl":"przysięgać / przeklinać","base":"swear","past":["swore"],"participle":["sworn"]},{"stars":3,"pl":"zamiatać","base":"sweep","past":["swept"],"participle":["swept"]},{"stars":3,"pl":"kołysać (się)","base":"swing","past":["swung"],"participle":["swung"]},{"stars":3,"pl":"rwać / drzeć","base":"tear","past":["tore"],"participle":["torn"]},{"stars":3,"pl":"deptać / kroczyć","base":"tread","past":["trod"],"participle":["trodden"]},{"stars":3,"pl":"płakać / szlochać","base":"weep","past":["wept"],"participle":["wept"]},{"stars":3,"pl":"nawijać / kręcić","base":"wind","past":["wound"],"participle":["wound"]},{"stars":3,"pl":"wycofać (np. pieniądze)","base":"withdraw","past":["withdrew"],"participle":["withdrawn"]},{"stars":2,"pl":"przestrzegać / znosić","base":"abide","past":["abode","abided"],"participle":["abode","abided"]},{"stars":2,"pl":"płodzić / wywoływać","base":"beget","past":["begot"],"participle":["begotten"]},{"stars":2,"pl":"ujrzeć / obserwować","base":"behold","past":["beheld"],"participle":["beheld"]},{"stars":2,"pl":"błagać / prosić","base":"beseech","past":["besought","beseeched"],"participle":["besought","beseeched"]},{"stars":2,"pl":"licytować / rozkazywać","base":"bid","past":["bid","bade"],"participle":["bid","bidden"]},{"stars":2,"pl":"karcić / łajać","base":"chide","past":["chid","chided"],"participle":["chidden","chided"]},{"stars":2,"pl":"rozłupywać / przylegać","base":"cleave","past":["cleft","clove"],"participle":["cleft","cloven"]},{"stars":2,"pl":"pełzać / skradać się","base":"creep","past":["crept"],"participle":["crept"]},{"stars":2,"pl":"uciekać","base":"flee","past":["fled"],"participle":["fled"]},{"stars":2,"pl":"rzucać z siłą","base":"fling","past":["flung"],"participle":["flung"]},{"stars":2,"pl":"wyrzekać się / złamać przysięgę","base":"forswear","past":["forswore"],"participle":["forsworn"]},{"stars":2,"pl":"kosić (np. trawę)","base":"mow","past":["mowed"],"participle":["mown","mowed"]},{"stars":2,"pl":"objadać się","base":"overeat","past":["overate"],"participle":["overeaten"]},{"stars":2,"pl":"doganiać / wyprzedzać","base":"overtake","past":["overtook"],"participle":["overtaken"]},{"stars":2,"pl":"brać udział","base":"partake","past":["partook"],"participle":["partaken"]},{"stars":2,"pl":"piłować","base":"saw","past":["sawed"],"participle":["sawn","sawed"]},{"stars":2,"pl":"strzyc (np. owce)","base":"shear","past":["shore","sheared"],"participle":["shorn","sheared"]},{"stars":2,"pl":"zrzucać (skórę) / lać (łzy)","base":"shed","past":["shed"],"participle":["shed"]},{"stars":2,"pl":"skradać się","base":"slink","past":["slunk"],"participle":["slunk"]},{"stars":2,"pl":"siać (ziarno)","base":"sow","past":["sowed"],"participle":["sown","sowed"]},{"stars":2,"pl":"kroczyć / robić duże kroki","base":"stride","past":["strode"],"participle":["stridden"]},{"stars":2,"pl":"dążyć / starać się","base":"strive","past":["strove"],"participle":["striven"]},{"stars":2,"pl":"pchać / wbijać","base":"thrust","past":["thrust"],"participle":["thrust"]},{"stars":2,"pl":"tkać","base":"weave","past":["wove"],"participle":["woven"]},{"stars":2,"pl":"wykręcać / ściskać","base":"wring","past":["wrung"],"participle":["wrung"]},{"stars":1,"pl":"pozbawiać / okrywać żałobą","base":"bereave","past":["bereft","bereaved"],"participle":["bereft","bereaved"]},{"stars":1,"pl":"ubierać / odziewać","base":"clothe","past":["clad","clothed"],"participle":["clad","clothed"]},{"stars":1,"pl":"zamieszkiwać","base":"dwell","past":["dwelt","dwelled"],"participle":["dwelt","dwelled"]},{"stars":1,"pl":"przepowiadać","base":"foretell","past":["foretold"],"participle":["foretold"]},{"stars":1,"pl":"opasać / otaczać","base":"gird","past":["girt","girded"],"participle":["girt","girded"]},{"stars":1,"pl":"unosić z wysiłkiem","base":"heave","past":["hove","heaved"],"participle":["hove","heaved"]},{"stars":1,"pl":"ładować (towar)","base":"lade","past":["laded"],"participle":["laden"]},{"stars":1,"pl":"razić / uderzać (np. mieczem)","base":"smite","past":["smote"],"participle":["smitten"]},{"stars":1,"pl":"mknąć / przyspieszać","base":"speed","past":["sped","speeded"],"participle":["sped","speeded"]},{"stars":1,"pl":"psuć / niszczyć","base":"spoil","past":["spoilt","spoiled"],"participle":["spoilt","spoiled"]},{"stars":1,"pl":"rozsypywać / rozrzucać","base":"strew","past":["strewed"],"participle":["strewn","strewed"]},{"stars":1,"pl":"puchnąć","base":"swell","past":["swelled"],"participle":["swollen","swelled"]},{"stars":1,"pl":"utrzymywać / wspierać","base":"uphold","past":["upheld"],"participle":["upheld"]},{"stars":1,"pl":"czyhać / napadać z ukrycia","base":"waylay","past":["waylaid"],"participle":["waylaid"]},{"stars":1,"pl":"kierować się / iść","base":"wend","past":["went","wended"],"participle":["went","wended"]},{"stars":1,"pl":"wywierać / wyładowywać (gniew)","base":"wreak","past":["wrought","wreaked"],"participle":["wrought","wreaked"]}];
+        /* VERB_BANK_END */
+        var VERB_ROUND_SIZE = HUB.verbRoundSize || 6;
+        var PRIORITY_VERBS = (HUB.priorityVerbs || []).map(function (s) { return String(s).trim().toLowerCase(); });
         var SENT_POOL = HUB.sentencePool || [];
         var SENT_COUNT = Math.min(HUB.sentenceCount || 5, SENT_POOL.length);
         var drawn = [];   // slowa aktualnie wylosowane do ulozenia zdan
@@ -3088,6 +2959,11 @@
         }
 
         var STORAGE_KEY = HUB.storageKey || 'hub_unknown';
+        // Postep czasownikow NIE moze siedziec na STORAGE_KEY: ten klucz zawiera monthId,
+        // wiec zmienia sie przy kazdym nowym okresie i zerowalby opanowane czasowniki co miesiac.
+        // STUDENT_KEY jest niezalezny od okresu (fallback na STORAGE_KEY dla starszych plikow
+        // sprzed tej zmiany, zeby nie wywalac bledu, gdy pole akurat nie doszlo).
+        var STUDENT_KEY = HUB.studentKey || STORAGE_KEY;
         var FC_KEY = STORAGE_KEY + '_fiszki';
         var SENT_KEY = STORAGE_KEY + '_zdania';
 
@@ -3191,7 +3067,7 @@
             });
 
             if (name === 'flashcards') resetFlashcardsToSetup();
-            if (name === 'verbs') startVerbRound();
+            if (name === 'verbs') resetVerbsToSetup();
             window.scrollTo(0, 0);
         }
 
@@ -3262,7 +3138,7 @@
                 { key: 'flashcards',    icon: '📒', label: 'Fiszki',    sub: count(vocabCount, 'słówko', 'słówka', 'słówek') + ' do przeklikania', count: vocabCount },
                 { key: 'test',          icon: '📝', label: 'Test',      sub: 'Sprawdź się, możesz też wydrukować', count: vocabCount },
                 { key: 'grammar',       icon: '📚', label: 'Gramatyka', sub: count(GRAMMAR.length, 'zagadnienie', 'zagadnienia', 'zagadnień') + ' z lekcji', count: GRAMMAR.length + HOMEWORK.length },
-                { key: 'verbs',         icon: '🔄', label: 'Czasowniki nieregularne', sub: VERB_ROUND_SIZE + ' z ' + VERBS.length + ', trzy formy', count: VERBS.length },
+                { key: 'verbs',         icon: '🔄', label: 'Czasowniki nieregularne', sub: VERB_ROUND_SIZE + ' na rundę z ' + VERB_BANK.length + ' w banku', count: VERB_BANK.length },
                 { key: 'pronunciation', icon: '🔊', label: 'Wymowa',    sub: count(PRONUNCIATION.length, 'słówko', 'słówka', 'słówek') + ' do posłuchania', count: PRONUNCIATION.length },
                 { key: 'sentences',     icon: '✍️', label: 'Ułóż zdania', sub: count(SENT_COUNT, 'słówko', 'słówka', 'słówek') + ' z puli ' + SENT_POOL.length + ', losowo', count: SENT_POOL.length }
             ];
@@ -3357,13 +3233,13 @@
                         return { label: h.label + (h.lessonLabel ? ' (' + h.lessonLabel + ')' : ''), url: h.url, type: h.type };
                     }));
             }
-            // Czasowniki nieregularne maja wlasny widok, bo bank narasta przez miesiace
-            // i nie nalezy do zadnej pojedynczej lekcji. Tutaj tylko odsylacz.
-            if (VERBS.length) {
+            // Czasowniki nieregularne maja wlasny widok i wlasny, globalny bank (nie
+            // naleza do zadnej pojedynczej lekcji), wiec tutaj jest tylko odsylacz.
+            if (VERB_BANK.length) {
                 html += '<p class="hub-section-title">Czasowniki nieregularne</p>' +
                     '<div class="hub-links"><button type="button" class="hub-link-tile" data-hub-nav="verbs" style="cursor:pointer; text-align:left; width:100%">' +
                     '<span class="hub-link-icon">🔄</span><span><span class="hub-link-label">Przećwicz trzy formy</span>' +
-                    '<span class="hub-link-host">' + count(VERBS.length, 'czasownik', 'czasowniki', 'czasowników') + ' w banku</span></span></button></div>';
+                    '<span class="hub-link-host">' + count(VERB_BANK.length, 'czasownik', 'czasowniki', 'czasowników') + ' w banku, wybierz zakres gwiazdek</span></span></button></div>';
             }
             hw.innerHTML = html;
         }
@@ -3654,8 +3530,9 @@
         // ==========================================
         // Czasowniki nieregularne
         // ==========================================
-        var VERB_KEY = STORAGE_KEY + '_czasowniki';
-        var verbProgress = {};      // { base: 'umiem' | 'do powtorki' }
+        var VERB_KEY = STUDENT_KEY + '_czasowniki';
+        var verbProgress = {};      // { base: 'umiem' | 'do powtorki' } - TRWALE, nie per rundy
+        var verbSelectedTiers = [1, 2, 3, 4, 5];   // zakres gwiazdek wybrany na ekranie startowym
         var verbRoundAll = [];      // caly wylosowany zestaw rundy
         var verbActive = [];        // wiersze aktualnie na ekranie
         var verbAttempts = 0;       // ile razy klikniete SPRAWDZ w tej rundzie
@@ -3689,33 +3566,64 @@
             return false;
         }
 
+        /** Odczytuje zaznaczone checkboxy zakresu gwiazdek. Null = nic nie zaznaczono. */
+        function selectedTierValues() {
+            var boxes = Array.prototype.slice.call(document.querySelectorAll('input[name="verb-tier"]:checked'));
+            if (!boxes.length) return null;
+            return boxes.map(function (b) { return parseInt(b.value, 10); });
+        }
+
         /*
-         * Runda to porcja, nie caly bank - po roku bank bedzie dlugi.
-         * Kolejnosc doboru: najpierw czasowniki z biezacego okresu, potem te
-         * oznaczone wczesniej jako "do powtorki", na koncu reszta losowo.
+         * Runda to porcja z WYBRANEGO ZAKRESU gwiazdek, nie caly bank (167 czasownikow
+         * na wszystkich poziomach naraz byloby nie do ogarniecia). Czasownik oznaczony
+         * jako "umiem" jest WYKLUCZONY NA STALE z puli, dopoki uczen nie zrobi resetu -
+         * to zmiana wzgledem starego zachowania, w ktorym byl tylko odsuwany na dalszy plan.
+         * Kolejnosc doboru: najpierw czasowniki wskazane przez nauczyciela (priorityVerbs,
+         * z notatek biezacej lekcji), potem "do powtorki", na koncu reszta losowo.
          */
         function drawVerbRound() {
-            var biezace = VERBS.filter(function (v) { return v.current; });
-            var starePowtorka = VERBS.filter(function (v) {
-                return !v.current && verbProgress[v.base] === 'do powtorki';
+            var pula = VERB_BANK.filter(function (v) {
+                return verbSelectedTiers.indexOf(v.stars) !== -1 && verbProgress[v.base] !== 'umiem';
             });
-            var stareReszta = VERBS.filter(function (v) {
-                return !v.current && verbProgress[v.base] !== 'do powtorki';
+            var priorytet = pula.filter(function (v) { return PRIORITY_VERBS.indexOf(v.base.toLowerCase()) !== -1; });
+            var doPowtorki = pula.filter(function (v) {
+                return priorytet.indexOf(v) === -1 && verbProgress[v.base] === 'do powtorki';
+            });
+            var reszta = pula.filter(function (v) {
+                return priorytet.indexOf(v) === -1 && doPowtorki.indexOf(v) === -1;
             });
 
-            var wybor = shuffle(biezace.slice());
-            if (wybor.length < VERB_ROUND_SIZE) {
-                wybor = wybor.concat(shuffle(starePowtorka.slice()));
-            }
-            if (wybor.length < VERB_ROUND_SIZE) {
-                wybor = wybor.concat(shuffle(stareReszta.slice()));
-            }
+            var wybor = shuffle(priorytet.slice())
+                .concat(shuffle(doPowtorki.slice()))
+                .concat(shuffle(reszta.slice()));
             verbRoundAll = shuffle(wybor.slice(0, VERB_ROUND_SIZE));
         }
 
+        /** Ekran startowy: wybor zakresu gwiazdek. Wchodzi sie tu za kazdym razem
+         *  przy wejsciu w widok - dokladnie jak resetFlashcardsToSetup dla fiszek. */
+        function resetVerbsToSetup() {
+            var summary = el('hub-verbs-summary');
+            if (summary) { summary.className = 'hidden'; summary.innerHTML = ''; }
+            var session = el('hub-verbs-session');
+            if (session) session.classList.add('hidden');
+            var setup = el('hub-verbs-setup');
+            if (setup) setup.classList.remove('hidden');
+        }
+
+        /** "Zaczynamy" na ekranie startowym: zapamietaj wybrany zakres i wystartuj sesje. */
+        function startVerbSession() {
+            var tiers = selectedTierValues();
+            if (!tiers) { window.alert('Zaznacz przynajmniej jeden zakres gwiazdek.'); return; }
+            verbSelectedTiers = tiers;
+            el('hub-verbs-setup').classList.add('hidden');
+            el('hub-verbs-session').classList.remove('hidden');
+            startVerbRound();
+        }
+
+        /** Kolejna runda z TEGO SAMEGO zakresu - "Nowa runda" w akcjach i w podsumowaniu.
+         *  Nie cofa do ekranu startowego, zeby "i tak dalej, i tak dalej" nie wymagalo
+         *  przeklikiwania checkboxow na nowo za kazdym razem. */
         function startVerbRound() {
-            if (!VERBS.length) return;
-            loadVerbProgress();
             drawVerbRound();
             verbActive = verbRoundAll.slice();
             verbAttempts = 0;
@@ -3724,7 +3632,32 @@
             verbChecked = false;
             var summary = el('hub-verbs-summary');
             if (summary) { summary.className = 'hidden'; summary.innerHTML = ''; }
+            if (!verbActive.length) { renderVerbsExhausted(); return; }
             renderVerbs();
+        }
+
+        /** Wszystkie czasowniki z wybranego zakresu sa juz "umiem" - zamiast pustej
+         *  tabeli pokazujemy stan koncowy, w duchu tego, jak fiszki koncza talie. */
+        function renderVerbsExhausted() {
+            var wRange = VERB_BANK.filter(function (v) { return verbSelectedTiers.indexOf(v.stars) !== -1; }).length;
+            el('hub-verbs-table').innerHTML = '';
+            var intro = el('hub-verbs-intro');
+            if (intro) intro.textContent = '';
+            setVerbChromeVisible(false);
+            setVerbButtons(false, false, false);
+            setVerbStatus('', false);
+
+            var box = el('hub-verbs-summary');
+            if (!box) return;
+            box.className = 'hub-verbs-summary';
+            box.innerHTML =
+                '<p class="hub-verbs-label">Brawo</p>' +
+                '<p class="hub-verbs-score">🎉</p>' +
+                '<p class="hub-verbs-sub">Opanowane wszystkie ' + count(wRange, 'czasownik', 'czasowniki', 'czasowników') + ' w tym zakresie.<br>' +
+                'Zresetuj postęp albo wybierz inny zakres gwiazdek.</p>' +
+                '<div class="hub-verbs-again"><button type="button" class="hub-cta hub-cta-alt" id="hub-verbs-change-range">&larr; Zmień zakres</button></div>';
+            var zmien = el('hub-verbs-change-range');
+            if (zmien) zmien.addEventListener('click', function () { zmien.blur(); resetVerbsToSetup(); });
         }
 
         function verbIntroText() {
@@ -3734,9 +3667,10 @@
                 return 'Poprawiasz ' + count(verbActive.length, 'czasownik', 'czasowniki', 'czasowników') +
                        ' z ' + verbRoundAll.length + ' w tej rundzie.';
             }
-            var biezace = verbRoundAll.filter(function (v) { return v.current; }).length;
-            var txt = count(verbRoundAll.length, 'czasownik', 'czasowniki', 'czasowników') + ' z ' + VERBS.length + ' w banku';
-            if (biezace) txt += ', w tym ' + biezace + ' z ostatnich lekcji';
+            var wRange = VERB_BANK.filter(function (v) { return verbSelectedTiers.indexOf(v.stars) !== -1; }).length;
+            var ilePriorytet = verbRoundAll.filter(function (v) { return PRIORITY_VERBS.indexOf(v.base.toLowerCase()) !== -1; }).length;
+            var txt = count(verbRoundAll.length, 'czasownik', 'czasowniki', 'czasowników') + ' z wybranego zakresu (' + wRange + ')';
+            if (ilePriorytet) txt += ', w tym ' + ilePriorytet + ' z ostatnich lekcji';
             return txt + '.';
         }
 
@@ -3796,7 +3730,11 @@
                     var cell = document.querySelector('[data-verb-cell="' + i + '-' + col.key + '"]');
                     var input = document.querySelector('[data-verb-input="' + i + '-' + col.key + '"]');
                     if (!cell || !input) return;
-                    var accepted = v[col.key] || [];
+                    // "base" w VERB_BANK jest zwyklym stringiem (klucz verbProgress i
+                    // priorityVerbs), past/participle sa tablicami dopuszczalnych form.
+                    // Ujednolicamy tutaj, zeby reszta funkcji dzialala jednakowo na obu.
+                    var rawAccepted = v[col.key];
+                    var accepted = Array.isArray(rawAccepted) ? rawAccepted : (rawAccepted ? [rawAccepted] : []);
                     var ok = matchesAny(input.value, accepted);
                     if (!ok) wszystkieOk = false;
 
@@ -3891,7 +3829,22 @@
             if (znowu) znowu.addEventListener('click', function () { znowu.blur(); startVerbRound(); });
         }
 
+        /** Reset postepu czasownikow. Odsyla do ekranu startowego, bo po skasowaniu
+         *  pamieci "umiem" runda z aktualnego zakresu jest inna niz ta na ekranie. */
+        function resetVerbsProgress() {
+            if (!window.confirm('Wyczyścić zapisany postęp czasowników nieregularnych?')) return;
+            verbProgress = {};
+            safeRemove(VERB_KEY);
+            resetVerbsToSetup();
+        }
+
         function wireVerbs() {
+            var start = el('hub-verbs-start');
+            if (start) start.addEventListener('click', function () { start.blur(); startVerbSession(); });
+
+            var reset = el('hub-verbs-reset');
+            if (reset) reset.addEventListener('click', function () { reset.blur(); resetVerbsProgress(); });
+
             var check = el('hub-verbs-check');
             if (check) check.addEventListener('click', function () { check.blur(); checkVerbs(); });
 
@@ -3900,9 +3853,6 @@
 
             var fresh = el('hub-verbs-new');
             if (fresh) fresh.addEventListener('click', function () { fresh.blur(); startVerbRound(); });
-
-            var reroll = el('hub-verbs-reroll');
-            if (reroll) reroll.addEventListener('click', function () { reroll.blur(); startVerbRound(); });
 
             var table = el('hub-verbs-table');
             if (table) {
