@@ -2941,7 +2941,23 @@ video {
                         "correction": "",
                         "items": [],
                         "explanation": "\"there is\" / \"there are\" (i przeszłe \"there was\" / \"there were\") wprowadzają istnienie czegoś w zdaniu. Stopniowanie przymiotników nieregularnych: good - better - the best.",
-                        "links": []
+                        "links": [
+                                {
+                                        "label": "There is (i trochę też it is) | ROCK YOUR ENGLISH #148",
+                                        "url": "https://www.youtube.com/watch?v=bADn-1Szvac&t=479s",
+                                        "type": "youtube"
+                                },
+                                {
+                                        "label": "There is, there are / there was, there were - Page 2 of 3 - Test-English",
+                                        "url": "https://test-english.com/grammar-points/a1/there-is-there-are/2/",
+                                        "type": "test"
+                                },
+                                {
+                                        "label": "There or It - Test-English",
+                                        "url": "https://test-english.com/grammar-points/a1/there-it/",
+                                        "type": "test"
+                                }
+                        ]
                 }
         ],
         "homework": [
@@ -2964,20 +2980,6 @@ video {
                         "dateLabel": "17.08.2026",
                         "label": "Past continuous and past simple - Test-English",
                         "url": "https://test-english.com/grammar-points/a2/past-continuous-past-simple/",
-                        "type": "test"
-                },
-                {
-                        "lessonLabel": "Lekcja 4",
-                        "dateLabel": "31.08.2026",
-                        "label": "There is, there are / there was, there were - Page 2 of 3 - Test-English",
-                        "url": "https://test-english.com/grammar-points/a1/there-is-there-are/2/",
-                        "type": "test"
-                },
-                {
-                        "lessonLabel": "Lekcja 4",
-                        "dateLabel": "31.08.2026",
-                        "label": "There or It - Test-English",
-                        "url": "https://test-english.com/grammar-points/a1/there-it/",
                         "type": "test"
                 }
         ],
@@ -3030,13 +3032,6 @@ video {
                         "label": "Speaking More Languages Could Keep Your Brain Younger",
                         "url": "https://poprostuangielskizgrzechem.pl/teksty-na-lekcje/X0syCPew?poziom=beginner",
                         "type": "article"
-                },
-                {
-                        "lessonLabel": "Lekcja 4",
-                        "dateLabel": "31.08.2026",
-                        "label": "There is (i trochę też it is) | ROCK YOUR ENGLISH #148",
-                        "url": "https://www.youtube.com/watch?v=bADn-1Szvac&t=479s",
-                        "type": "youtube"
                 }
         ],
         "pronunciation": [],
@@ -4708,7 +4703,7 @@ video {
                             }).join('') + '</ul>';
                         }
                         return '<div class="hub-gram">' +
-                            '<p class="hub-gram-topic">' + escapeHtml(g.topic || '') + '</p>' +
+                            (g.topic ? '<p class="hub-gram-topic">' + escapeHtml(g.topic) + '</p>' : '') +
                             '<p class="hub-gram-lesson">' + escapeHtml(g.lessonLabel || '') +
                             (g.dateLabel ? ' &middot; ' + escapeHtml(g.dateLabel) : '') + '</p>' +
                             pair + items +
