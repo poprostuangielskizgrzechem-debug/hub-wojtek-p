@@ -1898,6 +1898,13 @@ video {
       .hub-inner { padding:28px 32px 26px; }
       @media (max-width:640px) { .hub-inner { padding:22px 18px 20px; } .hub-shell { margin-bottom:56px; } }
 
+      /* --- powrot do listy okresow (tylko na ekranie startowym) --- */
+      .hub-back-row { margin-bottom:14px; }
+      .hub-back-link { display:inline-flex; align-items:center; gap:6px; text-decoration:none;
+                        font-family:'Plus Jakarta Sans', Arial, sans-serif; font-size:12px; font-weight:700;
+                        letter-spacing:.3px; color:var(--hub-muted); }
+      .hub-back-link:hover { color:var(--hub-blue); }
+
       .hub-head { text-align:center; border-bottom:1px solid var(--hub-line); padding-bottom:18px; margin-bottom:20px; }
       .hub-title { font-family:'Plus Jakarta Sans', Arial, sans-serif; font-size:26px; font-weight:800;
                    color:var(--hub-blue); letter-spacing:-.5px; margin:0; }
@@ -2249,6 +2256,10 @@ video {
             <div class="hub-shell">
                 <div class="hub-topbar"></div>
                 <div class="hub-inner">
+
+                    <div class="hub-back-row">
+                        <a class="hub-back-link" href="../">&larr; Powr&oacute;t do wyboru miesi&#261;ca</a>
+                    </div>
 
                     <div class="hub-head">
                         <h2 class="hub-title" id="hub-home-title">Twoje s&#322;&oacute;wka</h2>
