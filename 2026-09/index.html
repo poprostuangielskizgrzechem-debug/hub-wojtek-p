@@ -2699,27 +2699,56 @@ video {
                         "topic": "Nieregularne stopniowanie przymiotników (bad - worse - the worst) i podstawy słowotwórstwa - jak z jednego rdzenia (science) powstają różne części mowy (scientific, scientist)."
                 }
         ],
-        "grammar": [],
+        "grammar": [
+                {
+                        "lessonLabel": "Lekcja 1",
+                        "dateLabel": "7.09.2026",
+                        "topic": "Przyimki czasu in/on/at",
+                        "mistake": "",
+                        "correction": "",
+                        "items": [],
+                        "explanation": "In używamy dla miesięcy, pór roku i lat, on dla dni i dat, a at dla godzin i konkretnych momentów.",
+                        "links": [
+                                {
+                                        "label": "Przyimki czasu IN / ON / AT (i tak ogólnie przyimki też) | ROCK YOUR ENGLISH #101",
+                                        "url": "https://www.youtube.com/watch?v=FL7glOBD6_s&t=1s",
+                                        "type": "youtube"
+                                },
+                                {
+                                        "label": "Prepositions of time: at/in/on - grammar (test-english.com)",
+                                        "url": "https://test-english.com/grammar-points/a1/at-in-on-prepositions-time/",
+                                        "type": "test"
+                                }
+                        ]
+                },
+                {
+                        "lessonLabel": "Lekcja 1",
+                        "dateLabel": "7.09.2026",
+                        "topic": "Stopniowanie przymiotników",
+                        "mistake": "",
+                        "correction": "",
+                        "items": [],
+                        "explanation": "Krótkie przymiotniki dostają końcówki -er/-est (young - younger - the youngest), dłuższe używają more/the most, a niektóre są nieregularne (bad - worse - the worst).",
+                        "links": [
+                                {
+                                        "label": "Stopniowanie przymiotników | ROCK YOUR ENGLISH #128",
+                                        "url": "https://www.youtube.com/watch?v=PvwtlUsBfXs&t=2s",
+                                        "type": "youtube"
+                                },
+                                {
+                                        "label": "Comparative adjectives - grammar (test-english.com)",
+                                        "url": "https://test-english.com/grammar-points/a1/comparative-adjectives/",
+                                        "type": "test"
+                                }
+                        ]
+                }
+        ],
         "homework": [
                 {
                         "lessonLabel": "Lekcja 1",
                         "dateLabel": "7.09.2026",
                         "label": "Parts of the body - vocabulary (test-english.com)",
                         "url": "https://test-english.com/vocabulary/a1/parts-of-the-body-a1-english-vocabulary/",
-                        "type": "test"
-                },
-                {
-                        "lessonLabel": "Lekcja 1",
-                        "dateLabel": "7.09.2026",
-                        "label": "Comparative adjectives - grammar (test-english.com)",
-                        "url": "https://test-english.com/grammar-points/a1/comparative-adjectives/",
-                        "type": "test"
-                },
-                {
-                        "lessonLabel": "Lekcja 1",
-                        "dateLabel": "7.09.2026",
-                        "label": "Prepositions of time: at/in/on - grammar (test-english.com)",
-                        "url": "https://test-english.com/grammar-points/a1/at-in-on-prepositions-time/",
                         "type": "test"
                 }
         ],
@@ -2730,20 +2759,6 @@ video {
                         "label": "Speaking More Languages Could Keep Your Brain Younger",
                         "url": "https://poprostuangielskizgrzechem.pl/teksty-na-lekcje/X0syCPew?poziom=beginner",
                         "type": "article"
-                },
-                {
-                        "lessonLabel": "Lekcja 1",
-                        "dateLabel": "7.09.2026",
-                        "label": "Przyimki czasu IN / ON / AT (i tak ogólnie przyimki też) | ROCK YOUR ENGLISH #101",
-                        "url": "https://www.youtube.com/watch?v=FL7glOBD6_s&t=1s",
-                        "type": "youtube"
-                },
-                {
-                        "lessonLabel": "Lekcja 1",
-                        "dateLabel": "7.09.2026",
-                        "label": "Stopniowanie przymiotników | ROCK YOUR ENGLISH #128",
-                        "url": "https://www.youtube.com/watch?v=PvwtlUsBfXs&t=2s",
-                        "type": "youtube"
                 }
         ],
         "pronunciation": [
@@ -4401,7 +4416,7 @@ video {
                             }).join('') + '</ul>';
                         }
                         return '<div class="hub-gram">' +
-                            '<p class="hub-gram-topic">' + escapeHtml(g.topic || '') + '</p>' +
+                            (g.topic ? '<p class="hub-gram-topic">' + escapeHtml(g.topic) + '</p>' : '') +
                             '<p class="hub-gram-lesson">' + escapeHtml(g.lessonLabel || '') +
                             (g.dateLabel ? ' &middot; ' + escapeHtml(g.dateLabel) : '') + '</p>' +
                             pair + items +
