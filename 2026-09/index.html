@@ -1918,6 +1918,8 @@ video {
                            text-transform:uppercase; letter-spacing:1px; color:var(--hub-muted);
                            margin:26px 0 12px; padding-top:18px; border-top:1px solid var(--hub-line); }
       .hub-section-title.is-first { margin-top:0; padding-top:0; border-top:none; }
+      .hub-lesson-group summary.hub-section-title { cursor:pointer; }
+      .hub-lesson-group summary.hub-section-title.is-first { margin-top:0; }
       .hub-empty { font-family:'Cormorant Garamond', Georgia, serif; font-style:italic; font-size:17px;
                    color:var(--hub-muted); text-align:center; padding:26px 10px; margin:0; }
 
@@ -2460,6 +2462,9 @@ video {
                         Wy&#347;lij je albo skopiuj, zanim zamkniesz plik.
                     </p>
 
+                    <p class="hub-section-title is-first">Z kt&oacute;rych lekcji</p>
+                    <div class="hub-chips" id="hub-sent-lesson-chips"></div>
+
                     <div id="hub-sentences-list"></div>
 
                     <div class="hub-share" id="hub-share-panel">
@@ -2516,6 +2521,19 @@ video {
                             <label class="hub-chip"><input type="checkbox" name="verb-tier" value="3" checked><span>&#9733;&#9733;&#9733;&#9734;&#9734;</span></label>
                             <label class="hub-chip"><input type="checkbox" name="verb-tier" value="2" checked><span>&#9733;&#9733;&#9734;&#9734;&#9734;</span></label>
                             <label class="hub-chip"><input type="checkbox" name="verb-tier" value="1" checked><span>&#9733;&#9734;&#9734;&#9734;&#9734;</span></label>
+                        </div>
+
+                        <p class="hub-section-title">Ile czasownik&oacute;w na rund&#281;</p>
+                        <div class="hub-rounds">
+                            <label for="hub-verbs-round-size">Czasowniki</label>
+                            <select id="hub-verbs-round-size">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6" selected>6</option>
+                            </select>
                         </div>
 
                         <button type="button" class="hub-cta hub-cta-check" id="hub-verbs-start" style="width:100%">Zaczynamy</button>
@@ -2908,21 +2926,96 @@ video {
         "priorityVerbs": [],
         "verbRoundSize": 6,
         "sentencePool": [
-                "scientific",
-                "scientist",
-                "find out",
-                "based on",
-                "angry",
-                "healthy",
-                "health",
-                "young",
-                "youth",
-                "research",
-                "study",
-                "results",
-                "connections",
-                "research center",
-                "brain age"
+                {
+                        "word": "scientific",
+                        "lessons": [
+                                "Lekcja 1"
+                        ]
+                },
+                {
+                        "word": "scientist",
+                        "lessons": [
+                                "Lekcja 1"
+                        ]
+                },
+                {
+                        "word": "find out",
+                        "lessons": [
+                                "Lekcja 1"
+                        ]
+                },
+                {
+                        "word": "based on",
+                        "lessons": [
+                                "Lekcja 1"
+                        ]
+                },
+                {
+                        "word": "angry",
+                        "lessons": [
+                                "Lekcja 1"
+                        ]
+                },
+                {
+                        "word": "healthy",
+                        "lessons": [
+                                "Lekcja 1"
+                        ]
+                },
+                {
+                        "word": "health",
+                        "lessons": [
+                                "Lekcja 1"
+                        ]
+                },
+                {
+                        "word": "young",
+                        "lessons": [
+                                "Lekcja 1"
+                        ]
+                },
+                {
+                        "word": "youth",
+                        "lessons": [
+                                "Lekcja 1"
+                        ]
+                },
+                {
+                        "word": "research",
+                        "lessons": [
+                                "Lekcja 1"
+                        ]
+                },
+                {
+                        "word": "study",
+                        "lessons": [
+                                "Lekcja 1"
+                        ]
+                },
+                {
+                        "word": "results",
+                        "lessons": [
+                                "Lekcja 1"
+                        ]
+                },
+                {
+                        "word": "connections",
+                        "lessons": [
+                                "Lekcja 1"
+                        ]
+                },
+                {
+                        "word": "research center",
+                        "lessons": [
+                                "Lekcja 1"
+                        ]
+                },
+                {
+                        "word": "brain age",
+                        "lessons": [
+                                "Lekcja 1"
+                        ]
+                }
         ],
         "sentenceCount": 5,
         "messages": [
@@ -4088,9 +4181,20 @@ video {
         /* VERB_BANK_END */
         var VERB_ROUND_SIZE = HUB.verbRoundSize || 6;
         var PRIORITY_VERBS = (HUB.priorityVerbs || []).map(function (s) { return String(s).trim().toLowerCase(); });
-        var SENT_POOL = HUB.sentencePool || [];
-        var SENT_COUNT = Math.min(HUB.sentenceCount || 5, SENT_POOL.length);
+        var SENT_POOL = HUB.sentencePool || [];      // [{word, lessons:[lessonLabel,...]}]
+        var SENT_COUNT_BASE = HUB.sentenceCount || 5;
+        var SENT_COUNT = Math.min(SENT_COUNT_BASE, SENT_POOL.length);
         var drawn = [];   // slowa aktualnie wylosowane do ulozenia zdan
+        // Domyslnie wszystkie lekcje zaznaczone - checkboxy filtruja pule PRZED
+        // losowaniem, dokladnie ten sam wzorzec co #fc-lesson-chips w fiszkach.
+        var sentLessonSelected = {};
+        LESSONS.forEach(function (l) { sentLessonSelected[l.label] = true; });
+
+        function filteredSentPool() {
+            return SENT_POOL.filter(function (item) {
+                return (item.lessons || []).some(function (lbl) { return sentLessonSelected[lbl]; });
+            });
+        }
         var MESSAGES = HUB.messages || [];
 
         // ==========================================
@@ -4399,41 +4503,58 @@ video {
             }).join('') + '</div>';
         }
 
+        // Grupuje plaska liste (gramatyka/media/wymowa) wg lekcji, w kolejnosci
+        // lekcji z LESSONS (juz posortowanej po dacie), zeby kazda zakladka mogla
+        // pokazac jeden naglowek sekcji "Lekcja N" zamiast tematu na kazdym kafelku.
+        function groupByLesson(list) {
+            var map = {};
+            (list || []).forEach(function (item) {
+                var key = item.lessonLabel || '';
+                (map[key] = map[key] || []).push(item);
+            });
+            return LESSONS.filter(function (l) { return map[l.label] && map[l.label].length; })
+                .map(function (l) { return { label: l.label, dateLabel: l.dateLabel, items: map[l.label] }; });
+        }
+
         function renderGrammar() {
             var box = el('hub-grammar-list');
             if (box) {
-                if (!GRAMMAR.length) {
+                var groups = groupByLesson(GRAMMAR);
+                if (!groups.length) {
                     box.innerHTML = '<p class="hub-empty">Na razie bez zagadnie&#324; gramatycznych. Poka&#380;&#261; si&#281; tu po kolejnej lekcji.</p>';
                 } else {
-                    box.innerHTML = GRAMMAR.map(function (g) {
-                        var pair = '';
-                        if (g.mistake || g.correction) {
-                            pair = '<div class="hub-gram-pair">';
-                            if (g.mistake) {
-                                pair += '<div class="hub-gram-line hub-gram-bad"><span class="hub-gram-mark">&#10007;</span>' +
-                                        '<span class="hub-gram-text">' + escapeHtml(g.mistake) + '</span></div>';
+                    box.innerHTML = groups.map(function (grp, gi) {
+                        var isLast = (gi === groups.length - 1);
+                        var head = '<summary class="hub-section-title' + (gi === 0 ? ' is-first' : '') + '">' +
+                            escapeHtml(grp.label) + (grp.dateLabel ? ' &middot; ' + escapeHtml(grp.dateLabel) : '') + '</summary>';
+                        var body = grp.items.map(function (g) {
+                            var pair = '';
+                            if (g.mistake || g.correction) {
+                                pair = '<div class="hub-gram-pair">';
+                                if (g.mistake) {
+                                    pair += '<div class="hub-gram-line hub-gram-bad"><span class="hub-gram-mark">&#10007;</span>' +
+                                            '<span class="hub-gram-text">' + escapeHtml(g.mistake) + '</span></div>';
+                                }
+                                if (g.correction) {
+                                    pair += '<div class="hub-gram-line hub-gram-good"><span class="hub-gram-mark">&#10003;</span>' +
+                                            '<span class="hub-gram-text">' + escapeHtml(g.correction) + '</span></div>';
+                                }
+                                pair += '</div>';
                             }
-                            if (g.correction) {
-                                pair += '<div class="hub-gram-line hub-gram-good"><span class="hub-gram-mark">&#10003;</span>' +
-                                        '<span class="hub-gram-text">' + escapeHtml(g.correction) + '</span></div>';
+                            // Lista form do zapamietania, np. czasowniki nieregularne.
+                            var items = '';
+                            if (g.items && g.items.length) {
+                                items = '<ul class="hub-gram-items">' + g.items.map(function (it) {
+                                    return '<li>' + escapeHtml(it) + '</li>';
+                                }).join('') + '</ul>';
                             }
-                            pair += '</div>';
-                        }
-                        // Lista form do zapamietania, np. czasowniki nieregularne.
-                        var items = '';
-                        if (g.items && g.items.length) {
-                            items = '<ul class="hub-gram-items">' + g.items.map(function (it) {
-                                return '<li>' + escapeHtml(it) + '</li>';
-                            }).join('') + '</ul>';
-                        }
-                        return '<div class="hub-gram">' +
-                            (g.topic ? '<p class="hub-gram-topic">' + escapeHtml(g.topic) + '</p>' : '') +
-                            '<p class="hub-gram-lesson">' + escapeHtml(g.lessonLabel || '') +
-                            (g.dateLabel ? ' &middot; ' + escapeHtml(g.dateLabel) : '') + '</p>' +
-                            pair + items +
-                            (g.explanation ? '<p class="hub-gram-expl">' + escapeAndLinkify(g.explanation) + '</p>' : '') +
-                            renderLinks(g.links) +
-                            '</div>';
+                            return '<div class="hub-gram">' +
+                                pair + items +
+                                (g.explanation ? '<p class="hub-gram-expl">' + escapeAndLinkify(g.explanation) + '</p>' : '') +
+                                renderLinks(g.links) +
+                                '</div>';
+                        }).join('');
+                        return '<details class="hub-lesson-group"' + (isLast ? ' open' : '') + '>' + head + body + '</details>';
                     }).join('');
                 }
             }
@@ -4464,13 +4585,18 @@ video {
         function renderMedia() {
             var box = el('hub-media-list');
             if (!box) return;
-            if (!MEDIA.length) {
+            var groups = groupByLesson(MEDIA);
+            if (!groups.length) {
                 box.innerHTML = '<p class="hub-empty">Na razie bez artyku&#322;&oacute;w ani film&oacute;w. Poka&#380;&#261; si&#281; tu po kolejnej lekcji.</p>';
                 return;
             }
-            box.innerHTML = renderLinks(MEDIA.map(function (m) {
-                return { label: m.label + (m.lessonLabel ? ' (' + m.lessonLabel + ')' : ''), url: m.url, type: m.type };
-            }));
+            box.innerHTML = groups.map(function (grp, gi) {
+                var head = '<p class="hub-section-title' + (gi === 0 ? ' is-first' : '') + '">' +
+                    escapeHtml(grp.label) + (grp.dateLabel ? ' &middot; ' + escapeHtml(grp.dateLabel) : '') + '</p>';
+                return head + renderLinks(grp.items.map(function (m) {
+                    return { label: m.label, url: m.url, type: m.type };
+                }));
+            }).join('');
         }
 
         // ==========================================
@@ -4479,20 +4605,30 @@ video {
         function renderPronunciation() {
             var box = el('hub-pronunciation-list');
             if (!box) return;
-            if (!PRONUNCIATION.length) {
+            var groups = groupByLesson(PRONUNCIATION);
+            if (!groups.length) {
                 box.innerHTML = '<p class="hub-empty">Brak s&#322;&oacute;wek z problematyczn&#261; wymow&#261;. Dobra robota.</p>';
                 return;
             }
-            box.innerHTML = PRONUNCIATION.map(function (p, i) {
-                var speaker = speechSupported
-                    ? '<button type="button" class="hub-speaker" data-hub-speak="' + i + '" aria-label="Pos&#322;uchaj wymowy">' + SPEAKER_SVG + '</button>'
-                    : '';
-                return '<div class="hub-pron">' + speaker +
-                    '<div class="hub-pron-body">' +
-                    '<p class="hub-pron-word">' + escapeHtml(p.word || '') + '</p>' +
-                    (p.translation ? '<p class="hub-pron-tr">' + escapeHtml(p.translation) + '</p>' : '') +
-                    (p.note ? '<p class="hub-pron-note">' + escapeHtml(p.note) + '</p>' : '') +
-                    '</div></div>';
+            // Speaker buttons id-uja slowka po pozycji we WSPOLNEJ, plaskiej liscie
+            // PRONUNCIATION (nie w obrebie grupy), zeby klikniecie trafialo w wlasciwy element.
+            box.innerHTML = groups.map(function (grp, gi) {
+                var isLast = (gi === groups.length - 1);
+                var head = '<summary class="hub-section-title' + (gi === 0 ? ' is-first' : '') + '">' +
+                    escapeHtml(grp.label) + (grp.dateLabel ? ' &middot; ' + escapeHtml(grp.dateLabel) : '') + '</summary>';
+                var body = grp.items.map(function (p) {
+                    var flatIdx = PRONUNCIATION.indexOf(p);
+                    var speaker = speechSupported
+                        ? '<button type="button" class="hub-speaker" data-hub-speak="' + flatIdx + '" aria-label="Pos&#322;uchaj wymowy">' + SPEAKER_SVG + '</button>'
+                        : '';
+                    return '<div class="hub-pron">' + speaker +
+                        '<div class="hub-pron-body">' +
+                        '<p class="hub-pron-word">' + escapeHtml(p.word || '') + '</p>' +
+                        (p.translation ? '<p class="hub-pron-tr">' + escapeHtml(p.translation) + '</p>' : '') +
+                        (p.note ? '<p class="hub-pron-note">' + escapeHtml(p.note) + '</p>' : '') +
+                        '</div></div>';
+                }).join('');
+                return '<details class="hub-lesson-group"' + (isLast ? ' open' : '') + '>' + head + body + '</details>';
             }).join('');
 
             box.addEventListener('click', function (e) {
@@ -4550,15 +4686,43 @@ video {
          * ktory pyta o zgode, gdy mialby skasowac napisane zdania.
          */
         function drawSentences() {
-            var przypiete = SENT_POOL.filter(function (w) {
+            var pool = filteredSentPool().map(function (item) { return item.word; });
+            SENT_COUNT = Math.min(SENT_COUNT_BASE, pool.length);
+            var przypiete = pool.filter(function (w) {
                 return (sentenceAnswers[w] || '').trim();
             });
-            var reszta = SENT_POOL.filter(function (w) {
+            var reszta = pool.filter(function (w) {
                 return przypiete.indexOf(w) === -1;
             });
             // shuffle() jest globalem silnika testowego; tasuje w miejscu, wiec kopia.
             var dolosowane = shuffle(reszta.slice()).slice(0, Math.max(0, SENT_COUNT - przypiete.length));
             drawn = przypiete.concat(dolosowane);
+        }
+
+        function renderSentLessonChips() {
+            var box = el('hub-sent-lesson-chips');
+            if (!box) return;
+            box.innerHTML = LESSONS.map(function (l) {
+                return '<label class="hub-chip">' +
+                    '<input type="checkbox" name="hub-sent-lesson" value="' + escapeHtml(l.label) + '" checked>' +
+                    '<span>' + escapeHtml(l.label) + '</span></label>';
+            }).join('');
+            box.addEventListener('change', function (e) {
+                var cb = e.target.closest ? e.target.closest('input[name="hub-sent-lesson"]') : null;
+                if (!cb) return;
+                var checkedAny = Array.prototype.slice.call(box.querySelectorAll('input[name="hub-sent-lesson"]:checked')).length > 0;
+                if (!checkedAny) {
+                    // Przynajmniej jedna lekcja musi zostac zaznaczona, inaczej pula jest pusta.
+                    cb.checked = true;
+                    return;
+                }
+                sentLessonSelected[cb.value] = cb.checked;
+                drawn.forEach(function (word) { delete sentenceAnswers[word]; });
+                saveSentences();
+                drawSentences();
+                renderSentences();
+                refreshShare();
+            });
         }
 
         var SHARE_LIMIT = 1800;
@@ -4612,7 +4776,7 @@ video {
         function renderSentences() {
             var box = el('hub-sentences-list');
             if (!box) return;
-            if (!SENT_POOL.length) {
+            if (!filteredSentPool().length) {
                 box.innerHTML = '<p class="hub-empty">Brak s&#322;&oacute;wek do &#263;wiczenia w zdaniach.</p>';
                 var panel = el('hub-share-panel');
                 if (panel) panel.classList.add('hidden');
@@ -4714,8 +4878,9 @@ video {
             var rerollBtn = el('hub-sent-reroll');
             if (rerollBtn) rerollBtn.addEventListener('click', function () {
                 rerollBtn.blur();
-                if (SENT_POOL.length <= SENT_COUNT) {
-                    setStatus('W puli jest tylko ' + count(SENT_POOL.length, 'słówko', 'słówka', 'słówek') + ', nie ma czego losować.', false);
+                var poolLen = filteredSentPool().length;
+                if (poolLen <= SENT_COUNT) {
+                    setStatus('W puli jest tylko ' + count(poolLen, 'słówko', 'słówka', 'słówek') + ', nie ma czego losować.', false);
                     return;
                 }
                 // Napisane zdania sa przypiete do losowania, wiec swiezy zestaw
@@ -4844,6 +5009,11 @@ video {
             var tiers = selectedTierValues();
             if (!tiers) { window.alert('Zaznacz przynajmniej jeden zakres gwiazdek.'); return; }
             verbSelectedTiers = tiers;
+            var sizeSelect = el('hub-verbs-round-size');
+            if (sizeSelect) {
+                var n = parseInt(sizeSelect.value, 10);
+                if (n >= 1 && n <= 6) VERB_ROUND_SIZE = n;
+            }
             el('hub-verbs-setup').classList.add('hidden');
             el('hub-verbs-session').classList.remove('hidden');
             startVerbRound();
@@ -5077,6 +5247,11 @@ video {
                 var tiers = selectedTierValues();
                 if (!tiers) { window.alert('Zaznacz przynajmniej jeden zakres gwiazdek.'); return; }
                 verbSelectedTiers = tiers;
+                var sizeSelect = el('hub-verbs-round-size');
+                if (sizeSelect) {
+                    var n = parseInt(sizeSelect.value, 10);
+                    if (n >= 1 && n <= 6) VERB_ROUND_SIZE = n;
+                }
                 setup.classList.add('hidden');
                 el('hub-verbs-session').classList.remove('hidden');
             }
@@ -5084,6 +5259,12 @@ video {
         }
 
         function wireVerbs() {
+            var sizeSelect = el('hub-verbs-round-size');
+            if (sizeSelect) {
+                var initSize = HUB.verbRoundSize;
+                if (initSize >= 1 && initSize <= 6) sizeSelect.value = String(initSize);
+            }
+
             var start = el('hub-verbs-start');
             if (start) start.addEventListener('click', function () { start.blur(); startVerbSession(); });
 
@@ -5559,6 +5740,7 @@ video {
             renderPronunciation();
 
             loadSentences();
+            renderSentLessonChips();
             drawSentences();
             renderSentences();
             wireSentences();
