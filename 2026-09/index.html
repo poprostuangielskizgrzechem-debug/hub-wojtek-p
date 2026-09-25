@@ -1994,7 +1994,7 @@ video {
       .hub-gram-good .hub-gram-mark { color:#1f8a4c; }
       .hub-gram-bad .hub-gram-text { text-decoration:line-through; color:var(--hub-muted); }
       .hub-gram-good .hub-gram-text { font-weight:700; color:var(--hub-ink); }
-      .hub-gram-expl { font-size:15px; line-height:1.65; color:var(--hub-ink); margin:0; }
+      .hub-gram-expl { font-size:15px; line-height:1.65; color:var(--hub-ink); margin:0; white-space:pre-line; }
       .hub-gram-items { list-style:none; margin:0 0 12px; padding:0; display:grid;
                         grid-template-columns:repeat(2, minmax(0,1fr)); gap:6px 14px; }
       @media (max-width:520px) { .hub-gram-items { grid-template-columns:1fr; } }
@@ -2514,7 +2514,9 @@ video {
         <!-- === HUB MODULE - START (exercises view) === -->
         <style>
             .hub-ex-item { margin: 0 0 12px; line-height: 2.1; }
+            .hub-ex-text { margin: 0 0 12px; line-height: 2.3; font-size: 15.5px; }
             .hub-ex-num { font-weight: 700; margin-right: 6px; }
+            .hub-ex-gapnum { font-weight: 700; margin: 0 3px 0 2px; }
             .hub-ex-input { border: none; border-bottom: 2px solid #94a3b8; background: transparent; font: inherit; text-align: center; padding: 0 4px; outline: none; }
             .hub-ex-input:focus { border-bottom-color: #2563eb; }
             .hub-ex-input.is-ok { border-bottom-color: #16a34a; color: #15803d; }
@@ -2522,6 +2524,17 @@ video {
             .hub-ex-key { color: #15803d; font-size: 0.85em; margin-left: 4px; }
             .hub-ex-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
             .hub-ex-score { font-weight: 700; }
+            .hub-ex-box { display: flex; flex-wrap: wrap; gap: 6px 14px; border: 1px solid var(--hub-line); border-radius: 10px;
+                          padding: 10px 14px; margin: 0 0 14px; font-weight: 600; }
+            .hub-ex-choice { display: inline-flex; flex-wrap: wrap; gap: 4px; vertical-align: middle; }
+            .hub-ex-opt { font: inherit; font-size: 14.5px; line-height: 1.35; padding: 2px 9px; border-radius: 8px; cursor: pointer;
+                          border: 1.5px solid #cbd5e1; background: #fff; color: var(--hub-ink); }
+            .hub-ex-opt:hover { border-color: #2563eb; }
+            .hub-ex-opt.is-picked { border-color: #2563eb; background: #eff6ff; font-weight: 700; }
+            .hub-ex-opt.is-ok { border-color: #16a34a; background: #f0fdf4; color: #15803d; }
+            .hub-ex-opt.is-bad { border-color: #dc2626; background: #fef2f2; color: #b91c1c; text-decoration: line-through; }
+            .hub-ex-opt.is-key { border-color: #16a34a; border-style: dashed; }
+            .hub-ex-saved { font-size: 12.5px; color: var(--hub-muted); margin: 0 0 14px; }
         </style>
         <section id="hub-exercises-view" class="hidden no-print flex-grow flex items-start justify-center relative z-20">
             <div class="hub-shell">
@@ -2530,10 +2543,21 @@ video {
 
                     <div class="hub-head">
                         <h2 class="hub-title">&Cacute;wiczenia</h2>
-                        <p class="hub-tagline">Uzupe&#322;nij luki i sprawd&#378; odpowiedzi.</p>
+                        <p class="hub-tagline">Uzupe&#322;nij luki, sprawd&#378; odpowiedzi i wy&#347;lij mi wynik.</p>
                     </div>
 
+                    <p class="hub-ex-saved">Twoje odpowiedzi zapisuj&#261; si&#281; same w tej przegl&#261;darce, mo&#380;esz wr&oacute;ci&#263; do nich p&oacute;&#378;niej.</p>
+
                     <div id="hub-exercises-list"></div>
+
+                    <div class="hub-share hidden" id="hub-ex-share-panel">
+                        <div class="hub-share-actions">
+                            <a class="hub-cta hub-cta-wa" id="hub-ex-share-wa" href="#" target="_blank" rel="noopener">&#128172; Wy&#347;lij wyniki na WhatsApp</a>
+                            <button type="button" class="hub-cta hub-cta-alt" id="hub-ex-share-copy">&#128203; Kopiuj wyniki</button>
+                        </div>
+                        <p class="hub-share-status" id="hub-ex-share-status"></p>
+                        <textarea class="hub-share-fallback hidden" id="hub-ex-share-fallback" readonly></textarea>
+                    </div>
 
                     <div class="hub-footer">
                         <button type="button" class="hub-link-btn" data-hub-nav="home">&larr; Powr&oacute;t</button>
@@ -5257,10 +5281,54 @@ video {
         // Cwiczenia z lukami: text z [gap], answers[i] to string albo lista
         // akceptowanych odpowiedzi dla i-tej luki. Porownanie bez wielkosci liter,
         // ze znormalizowanym apostrofem i spacjami.
+        //
+        // Luka jest albo do wpisania (<input>), albo do klikniecia, gdy pozycja ma
+        // choices[i] z lista opcji. layout "text" sklada pozycje w jeden ciagly
+        // tekst z lukami numerowanymi (1), (2)..., jak w podreczniku.
+        //
+        // Odpowiedzi zapisuja sie same (EX_KEY), razem z flaga "sprawdzone" i
+        // "podejrzane odpowiedzi". Ta druga jest celowo trwala i nie znika po
+        // "Wyczysc" - inaczej wynik wyslany nauczycielowi mowilby nieprawde.
+        var EX_KEY = STORAGE_KEY + '_cwiczenia';
         function exNorm(v) {
-            return String(v || '').toLowerCase().replace(/[\u2018\u2019`]/g, "'").replace(/\s+/g, ' ').trim();
+            return String(v || '').toLowerCase().replace(/[‘’`]/g, "'").replace(/\s+/g, ' ').trim();
         }
         function exAccepted(a) { return Array.isArray(a) ? a : [a]; }
+        function exLoad() {
+            try { var o = JSON.parse(safeGet(EX_KEY) || '{}'); return (o && typeof o === 'object') ? o : {}; }
+            catch (e) { return {}; }
+        }
+        var exState = exLoad();   // { "<exIdx>": { v: { "it-gap": wartosc }, checked: bool, peeked: bool } }
+        function exSt(exIdx) {
+            var k = String(exIdx);
+            if (!exState[k] || typeof exState[k] !== 'object') exState[k] = { v: {}, checked: false, peeked: false };
+            if (!exState[k].v) exState[k].v = {};
+            return exState[k];
+        }
+        function exSave() { safeSet(EX_KEY, JSON.stringify(exState)); }
+        function exIsChoice(ex, itIdx, gap) {
+            var ch = ex.items[itIdx].choices;
+            return !!(ch && ch[gap] && ch[gap].length);
+        }
+        function exLetter(ex, i) { return ex.letters ? String.fromCharCode(65 + i) + ' ' : ''; }
+        // Wynik jednego cwiczenia liczony z zapisanego stanu, nie z DOM - ten sam
+        // rachunek dla ekranu i dla wiadomosci na WhatsApp.
+        function exResult(exIdx) {
+            var ex = EXERCISES[exIdx], st = exSt(exIdx);
+            var total = 0, ok = 0, filled = 0, wrong = [], n = 0;
+            ex.items.forEach(function (it, itIdx) {
+                it.answers.forEach(function (a, gap) {
+                    n++;
+                    total++;
+                    var val = st.v[itIdx + '-' + gap] || '';
+                    if (String(val).trim()) filled++;
+                    var good = String(val).trim() && exAccepted(a).some(function (x) { return exNorm(x) === exNorm(val); });
+                    if (good) ok++;
+                    else wrong.push({ num: ex.layout === 'text' ? n : (itIdx + 1), val: String(val).trim() });
+                });
+            });
+            return { total: total, ok: ok, filled: filled, wrong: wrong };
+        }
         function renderExercises() {
             var box = el('hub-exercises-list');
             if (!box) return;
@@ -5269,20 +5337,40 @@ video {
                 return;
             }
             box.innerHTML = EXERCISES.map(function (ex, exIdx) {
-                var body = ex.items.map(function (it, itIdx) {
+                var gapNo = 0;
+                function gapHtml(it, itIdx, i) {
+                    gapNo++;
+                    var num = ex.layout === 'text' ? '<span class="hub-ex-gapnum">(' + gapNo + ')</span>' : '';
+                    if (exIsChoice(ex, itIdx, i)) {
+                        return num + '<span class="hub-ex-choice" data-ex="' + exIdx + '" data-it="' + itIdx + '" data-gap="' + i + '">' +
+                            it.choices[i].map(function (opt, oi) {
+                                return '<button type="button" class="hub-ex-opt" data-opt="' + escapeHtml(opt) + '">' +
+                                    escapeHtml(exLetter(ex, oi) + opt) + '</button>';
+                            }).join('') + '</span>';
+                    }
+                    return num + '<input type="text" class="hub-ex-input" size="11" autocomplete="off" autocapitalize="off" spellcheck="false" data-ex="' + exIdx + '" data-it="' + itIdx + '" data-gap="' + i + '">';
+                }
+                function itemHtml(it, itIdx) {
                     var parts = it.text.split('[gap]');
-                    var html = parts.map(function (p, i) {
-                        var inp = (i < parts.length - 1)
-                            ? '<input type="text" class="hub-ex-input" size="11" autocomplete="off" autocapitalize="off" spellcheck="false" data-ex="' + exIdx + '" data-it="' + itIdx + '" data-gap="' + i + '">'
-                            : '';
-                        return escapeHtml(p) + inp;
+                    return parts.map(function (p, i) {
+                        return escapeHtml(p) + (i < parts.length - 1 ? gapHtml(it, itIdx, i) : '');
                     }).join('');
-                    return '<div class="hub-ex-item"><span class="hub-ex-num">' + (itIdx + 1) + '.</span>' + html + '</div>';
-                }).join('');
+                }
+                var body;
+                if (ex.layout === 'text') {
+                    body = '<p class="hub-ex-text">' + ex.items.map(itemHtml).join(' ') + '</p>';
+                } else {
+                    body = ex.items.map(function (it, itIdx) {
+                        return '<div class="hub-ex-item"><span class="hub-ex-num">' + (itIdx + 1) + '.</span>' + itemHtml(it, itIdx) + '</div>';
+                    }).join('');
+                }
+                var wordBox = (ex.wordBox && ex.wordBox.length)
+                    ? '<div class="hub-ex-box">' + ex.wordBox.map(function (w) { return '<span>' + escapeHtml(w) + '</span>'; }).join('') + '</div>'
+                    : '';
                 return '<details class="hub-lesson-group" open>' +
                     '<summary class="hub-section-title' + (exIdx === 0 ? ' is-first' : '') + '">' + escapeHtml(ex.title || '') + '</summary>' +
-                    (ex.instructions ? '<p class="hub-msg-body">' + escapeHtml(ex.instructions) + '</p>' : '') +
-                    body +
+                    (ex.instructions ? '<p class="hub-msg-body" style="margin-bottom:12px">' + escapeHtml(ex.instructions) + '</p>' : '') +
+                    wordBox + body +
                     '<div class="hub-ex-actions">' +
                     '<button type="button" class="hub-link-btn" data-ex-check="' + exIdx + '">Sprawd&#378;</button>' +
                     '<button type="button" class="hub-link-btn" data-ex-show="' + exIdx + '">Poka&#380; odpowiedzi</button>' +
@@ -5291,55 +5379,225 @@ video {
                     '</div></details>';
             }).join('');
 
-            function inputsOf(exIdx) {
-                return Array.prototype.slice.call(box.querySelectorAll('input[data-ex="' + exIdx + '"]'));
+            function gapsOf(exIdx) {
+                return Array.prototype.slice.call(box.querySelectorAll('[data-ex="' + exIdx + '"]'));
             }
-            function clearKeys(exIdx) {
-                inputsOf(exIdx).forEach(function (inp) {
-                    var k = inp.nextSibling;
+            function keyOf(g) { return g.getAttribute('data-it') + '-' + g.getAttribute('data-gap'); }
+            function answerOf(g) {
+                return EXERCISES[+g.getAttribute('data-ex')].items[+g.getAttribute('data-it')].answers[+g.getAttribute('data-gap')];
+            }
+            function valueOf(g) {
+                if (g.tagName === 'INPUT') return g.value;
+                var p = g.querySelector('.hub-ex-opt.is-picked');
+                return p ? p.getAttribute('data-opt') : '';
+            }
+            function isOk(g) {
+                var v = valueOf(g);
+                return !!String(v).trim() && exAccepted(answerOf(g)).some(function (x) { return exNorm(x) === exNorm(v); });
+            }
+            function clearMarks(g) {
+                if (g.tagName === 'INPUT') {
+                    g.classList.remove('is-ok', 'is-bad');
+                    var k = g.nextSibling;
                     if (k && k.className === 'hub-ex-key') k.parentNode.removeChild(k);
-                });
+                } else {
+                    Array.prototype.forEach.call(g.querySelectorAll('.hub-ex-opt'), function (b) {
+                        b.classList.remove('is-ok', 'is-bad', 'is-key');
+                    });
+                }
             }
-            function isOk(inp) {
-                var a = EXERCISES[+inp.getAttribute('data-ex')].items[+inp.getAttribute('data-it')].answers[+inp.getAttribute('data-gap')];
-                return exAccepted(a).some(function (x) { return exNorm(x) === exNorm(inp.value); });
+            function markCheck(exIdx) {
+                var gs = gapsOf(exIdx), ok = 0;
+                gs.forEach(function (g) {
+                    clearMarks(g);
+                    var good = isOk(g);
+                    if (good) ok++;
+                    if (g.tagName === 'INPUT') {
+                        g.classList.toggle('is-ok', good);
+                        g.classList.toggle('is-bad', !good);
+                    } else {
+                        var p = g.querySelector('.hub-ex-opt.is-picked');
+                        if (p) p.classList.add(good ? 'is-ok' : 'is-bad');
+                    }
+                });
+                box.querySelector('[data-ex-score="' + exIdx + '"]').textContent = ok + ' / ' + gs.length;
+            }
+            function setScoreEmpty(exIdx) { box.querySelector('[data-ex-score="' + exIdx + '"]').textContent = ''; }
+
+            // Przywrocenie zapisanych odpowiedzi.
+            EXERCISES.forEach(function (ex, exIdx) {
+                var st = exSt(exIdx);
+                gapsOf(exIdx).forEach(function (g) {
+                    var v = st.v[keyOf(g)];
+                    if (v === undefined || v === '') return;
+                    if (g.tagName === 'INPUT') g.value = v;
+                    else Array.prototype.forEach.call(g.querySelectorAll('.hub-ex-opt'), function (b) {
+                        b.classList.toggle('is-picked', b.getAttribute('data-opt') === v);
+                    });
+                });
+                if (st.checked) markCheck(exIdx);
+            });
+
+            function touched(g) {
+                var exIdx = +g.getAttribute('data-ex');
+                var st = exSt(exIdx);
+                st.v[keyOf(g)] = valueOf(g);
+                if (st.checked) { st.checked = false; setScoreEmpty(exIdx); }
+                clearMarks(g);
+                exSave();
+                refreshExShare();
             }
             box.addEventListener('input', function (e) {
-                if (e.target && e.target.classList && e.target.classList.contains('hub-ex-input')) {
-                    e.target.classList.remove('is-ok', 'is-bad');
-                }
+                if (e.target && e.target.classList && e.target.classList.contains('hub-ex-input')) touched(e.target);
             });
             box.addEventListener('click', function (e) {
+                var opt = e.target.closest ? e.target.closest('.hub-ex-opt') : null;
+                if (opt) {
+                    var grp = opt.parentNode;
+                    Array.prototype.forEach.call(grp.querySelectorAll('.hub-ex-opt'), function (b) { b.classList.toggle('is-picked', b === opt); });
+                    touched(grp);
+                    return;
+                }
                 var t = e.target.closest ? e.target.closest('[data-ex-check],[data-ex-show],[data-ex-reset]') : null;
                 if (!t) return;
+                t.blur();
                 var exIdx;
                 if (t.hasAttribute('data-ex-check')) {
                     exIdx = +t.getAttribute('data-ex-check');
-                    var ins = inputsOf(exIdx), ok = 0;
-                    clearKeys(exIdx);
-                    ins.forEach(function (inp) {
-                        var good = isOk(inp);
-                        inp.classList.toggle('is-ok', good);
-                        inp.classList.toggle('is-bad', !good);
-                        if (good) ok++;
-                    });
-                    box.querySelector('[data-ex-score="' + exIdx + '"]').textContent = ok + ' / ' + ins.length;
+                    markCheck(exIdx);
+                    exSt(exIdx).checked = true;
+                    exSave();
                 } else if (t.hasAttribute('data-ex-show')) {
                     exIdx = +t.getAttribute('data-ex-show');
-                    clearKeys(exIdx);
-                    inputsOf(exIdx).forEach(function (inp) {
-                        var a = exAccepted(EXERCISES[exIdx].items[+inp.getAttribute('data-it')].answers[+inp.getAttribute('data-gap')]);
-                        var k = document.createElement('span');
-                        k.className = 'hub-ex-key';
-                        k.textContent = '(' + a[0] + ')';
-                        inp.parentNode.insertBefore(k, inp.nextSibling);
+                    exSt(exIdx).peeked = true;
+                    exSave();
+                    gapsOf(exIdx).forEach(function (g) {
+                        var a = exAccepted(answerOf(g));
+                        if (g.tagName === 'INPUT') {
+                            var old = g.nextSibling;
+                            if (old && old.className === 'hub-ex-key') old.parentNode.removeChild(old);
+                            var k = document.createElement('span');
+                            k.className = 'hub-ex-key';
+                            k.textContent = '(' + a[0] + ')';
+                            g.parentNode.insertBefore(k, g.nextSibling);
+                        } else {
+                            Array.prototype.forEach.call(g.querySelectorAll('.hub-ex-opt'), function (b) {
+                                var isKey = a.some(function (x) { return exNorm(x) === exNorm(b.getAttribute('data-opt')); });
+                                b.classList.toggle('is-key', isKey);
+                            });
+                        }
                     });
                 } else {
                     exIdx = +t.getAttribute('data-ex-reset');
-                    clearKeys(exIdx);
-                    inputsOf(exIdx).forEach(function (inp) { inp.value = ''; inp.classList.remove('is-ok', 'is-bad'); });
-                    box.querySelector('[data-ex-score="' + exIdx + '"]').textContent = '';
+                    var st = exSt(exIdx);
+                    st.v = {};
+                    st.checked = false;
+                    exSave();
+                    gapsOf(exIdx).forEach(function (g) {
+                        clearMarks(g);
+                        if (g.tagName === 'INPUT') g.value = '';
+                        else Array.prototype.forEach.call(g.querySelectorAll('.hub-ex-opt'), function (b) { b.classList.remove('is-picked'); });
+                    });
+                    setScoreEmpty(exIdx);
                 }
+                refreshExShare();
+            });
+
+            wireExShare();
+            refreshExShare();
+        }
+
+        // Wiadomosc z wynikami: wynik kazdego zaczetego cwiczenia i lista zlych
+        // albo pustych luk z tym, co uczen wpisal. Poprawnych odpowiedzi w niej
+        // nie ma - nauczyciel je zna, a wiadomosc zostaje krotka.
+        function buildExShareText() {
+            var lines = [(HUB.student || 'Uczeń') + ' - ' + (HUB.monthLabel || '') + ', ćwiczenia', ''];
+            EXERCISES.forEach(function (ex, exIdx) {
+                var r = exResult(exIdx);
+                if (!r.filled) return;
+                var head = (ex.title || ('Ćwiczenie ' + (exIdx + 1))) + ': ' + r.ok + '/' + r.total;
+                if (exSt(exIdx).peeked) head += ' (podejrzane odpowiedzi)';
+                lines.push(head);
+                if (r.wrong.length) {
+                    lines.push('Błędy: ' + r.wrong.map(function (w) {
+                        return '(' + w.num + ') ' + (w.val || '-');
+                    }).join(', '));
+                }
+                lines.push('');
+            });
+            return lines.join('\n').trim();
+        }
+        function exStartedCount() {
+            var n = 0;
+            EXERCISES.forEach(function (ex, exIdx) { if (exResult(exIdx).filled) n++; });
+            return n;
+        }
+        function setExStatus(msg, warn) {
+            var st = el('hub-ex-share-status');
+            if (!st) return;
+            st.textContent = msg || '';
+            st.classList.toggle('is-warn', !!warn);
+        }
+        function refreshExShare() {
+            var panel = el('hub-ex-share-panel');
+            var wa = el('hub-ex-share-wa');
+            if (!panel || !wa) return;
+            panel.classList.toggle('hidden', !EXERCISES.length);
+            var n = exStartedCount();
+            if (!n) {
+                wa.classList.add('is-disabled');
+                wa.setAttribute('href', '#');
+                setExStatus('Zrób przynajmniej jedno ćwiczenie, żeby było co wysłać.', false);
+                return;
+            }
+            var num = (HUB.teacherWhatsApp || '').replace(/[^0-9]/g, '');
+            wa.classList.remove('is-disabled');
+            wa.setAttribute('href', 'https://wa.me/' + num + '?text=' + encodeURIComponent(buildExShareText()));
+            setExStatus('Gotowe do wysłania: ' + count(n, 'ćwiczenie', 'ćwiczenia', 'ćwiczeń') + ' z ' + EXERCISES.length + '.', false);
+        }
+        var exShareWired = false;
+        function wireExShare() {
+            if (exShareWired) return;
+            exShareWired = true;
+            var copyBtn = el('hub-ex-share-copy');
+            if (!copyBtn) return;
+            copyBtn.addEventListener('click', function () {
+                copyBtn.blur();
+                if (!exStartedCount()) { setExStatus('Zrób przynajmniej jedno ćwiczenie, żeby było co wysłać.', true); return; }
+                var text = buildExShareText();
+                var fallback = el('hub-ex-share-fallback');
+                function done() {
+                    if (fallback) fallback.classList.add('hidden');
+                    setExStatus('Skopiowane. Wklej na WhatsAppie albo gdzie chcesz.', false);
+                }
+                function manual() {
+                    if (!fallback) return;
+                    fallback.classList.remove('hidden');
+                    fallback.value = text;
+                    fallback.focus();
+                    fallback.select();
+                    setExStatus('Zaznacz tekst poniżej i skopiuj ręcznie.', true);
+                }
+                function legacy() {
+                    var ok = false;
+                    try {
+                        var tmp = document.createElement('textarea');
+                        tmp.value = text;
+                        tmp.setAttribute('readonly', '');
+                        tmp.style.position = 'fixed';
+                        tmp.style.top = '-1000px';
+                        tmp.style.opacity = '0';
+                        document.body.appendChild(tmp);
+                        tmp.select();
+                        tmp.setSelectionRange(0, text.length);
+                        ok = document.execCommand('copy');
+                        document.body.removeChild(tmp);
+                    } catch (e) { ok = false; }
+                    if (ok) done(); else manual();
+                }
+                if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+                    navigator.clipboard.writeText(text).then(done).catch(legacy);
+                } else legacy();
             });
         }
 
