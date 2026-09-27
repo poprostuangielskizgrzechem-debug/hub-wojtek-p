@@ -2001,6 +2001,43 @@ video {
       .hub-gram-items li { background:var(--hub-paper); border-radius:8px; padding:7px 11px;
                            font-size:14.5px; color:var(--hub-ink); }
 
+      /* --- notatka graficzna (g.sections) --- */
+      .hub-gsections { display:flex; flex-direction:column; gap:12px; margin-top:14px; }
+      .hub-gcard { --t:var(--hub-blue); --tb:var(--hub-tint); border:1px solid var(--hub-line); border-left:5px solid var(--t);
+                   border-radius:12px; padding:14px 16px; background:#fff; }
+      .tone-red   { --t:var(--hub-accent); --tb:#fdecee; }
+      .tone-green { --t:#1f8a4c; --tb:#e8f5ee; }
+      .tone-gold  { --t:#b7791f; --tb:#fdf6e3; }
+      .hub-gcard-title { font-family:'Plus Jakarta Sans', Arial, sans-serif; font-size:16px; font-weight:800;
+                         color:var(--t); margin:0 0 8px; display:flex; gap:8px; align-items:baseline; }
+      .hub-gcard-emoji { font-size:19px; line-height:1; }
+      .hub-gcard-points { margin:0; padding-left:20px; font-size:15px; line-height:1.6; color:var(--hub-ink); }
+      .hub-gcard-points li + li { margin-top:4px; }
+      .hub-gcard-ex { background:var(--tb); border-radius:10px; padding:10px 13px; margin-top:10px; }
+      .hub-gcard-ex-label { font-family:'Plus Jakarta Sans', Arial, sans-serif; font-size:10.5px; font-weight:700;
+                            text-transform:uppercase; letter-spacing:.8px; color:var(--t); margin:0 0 4px; }
+      .hub-gcard-ex-line { font-size:15px; line-height:1.55; color:var(--hub-ink); margin:0; }
+      .hub-gcard-ex-line + .hub-gcard-ex-line { margin-top:5px; }
+      .hub-hl { color:var(--t); font-weight:800; }
+      .hub-gtable-wrap { overflow-x:auto; }
+      .hub-gtable { width:100%; border-collapse:collapse; font-size:14.5px; line-height:1.5; }
+      .hub-gtable th { font-family:'Plus Jakarta Sans', Arial, sans-serif; font-weight:800; text-align:left;
+                       background:var(--tb); color:var(--hub-ink); padding:8px 10px; }
+      .hub-gtable td { padding:8px 10px; border-top:1px solid var(--hub-line); vertical-align:top; color:var(--hub-ink); }
+      .hub-gtable td + td, .hub-gtable th + th { border-left:1px solid var(--hub-line); }
+      .hub-gtip { --t:var(--hub-blue); --tb:var(--hub-tint); display:flex; gap:12px; align-items:flex-start;
+                  background:var(--tb); border-radius:12px; padding:13px 16px; }
+      .hub-gtip-emoji { font-size:22px; line-height:1.2; flex-shrink:0; }
+      .hub-gtip-title { font-family:'Plus Jakarta Sans', Arial, sans-serif; font-size:15px; font-weight:800; color:var(--t); margin:0 0 3px; }
+      .hub-gtip-text { font-size:15px; line-height:1.6; color:var(--hub-ink); margin:0; white-space:pre-line; }
+      @media (max-width:520px) {
+        .hub-gram:has(.hub-gsections) { padding:14px 10px; }
+        .hub-gcard { padding:12px 11px; }
+        .hub-gtip { padding:12px 11px; gap:9px; }
+        .hub-gtable { font-size:13.5px; }
+        .hub-gtable th, .hub-gtable td { padding:7px 6px; }
+      }
+
       /* --- kafelki linkow --- */
       .hub-links { display:flex; flex-direction:column; gap:8px; margin-top:14px; }
       .hub-link-tile { display:flex; align-items:center; gap:12px; text-decoration:none;
@@ -2517,7 +2554,7 @@ video {
             .hub-ex-text { margin: 0 0 12px; line-height: 2.3; font-size: 15.5px; }
             .hub-ex-num { font-weight: 700; margin-right: 6px; }
             .hub-ex-gapnum { font-weight: 700; margin: 0 3px 0 2px; }
-            .hub-ex-input { border: none; border-bottom: 2px solid #94a3b8; background: transparent; font: inherit; text-align: center; padding: 0 4px; outline: none; }
+            .hub-ex-input { border: none; border-bottom: 2px solid #94a3b8; background: transparent; font: inherit; text-align: center; padding: 0 4px; outline: none; max-width: 100%; }
             .hub-ex-input:focus { border-bottom-color: #2563eb; }
             .hub-ex-input.is-ok { border-bottom-color: #16a34a; color: #15803d; }
             .hub-ex-input.is-bad { border-bottom-color: #dc2626; color: #b91c1c; }
@@ -2534,6 +2571,21 @@ video {
             .hub-ex-opt.is-ok { border-color: #16a34a; background: #f0fdf4; color: #15803d; }
             .hub-ex-opt.is-bad { border-color: #dc2626; background: #fef2f2; color: #b91c1c; text-decoration: line-through; }
             .hub-ex-opt.is-key { border-color: #16a34a; border-style: dashed; }
+            .hub-ex-table-wrap { overflow-x: auto; margin: 0 0 12px; }
+            .hub-ex-table { width: 100%; border-collapse: collapse; }
+            .hub-ex-table th { text-align: left; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--hub-muted); padding: 4px 6px 8px; }
+            .hub-ex-table td { padding: 8px 6px; border-top: 1px solid var(--hub-line); vertical-align: middle; }
+            .hub-ex-table td.hub-ex-num { width: 1%; white-space: nowrap; }
+            .hub-ex-table .hub-ex-input { width: 100%; min-width: 90px; text-align: left; }
+            .hub-ex-img { width: 1%; }
+            .hub-ex-img svg { display: block; height: 40px; width: auto; max-width: 64px; box-shadow: 0 0 0 1px #cbd5e1; }
+            .hub-ex-self { margin: 0 0 16px; }
+            .hub-ex-self-q { margin: 0 0 6px; line-height: 1.5; }
+            .hub-ex-selfinput { width: 100%; box-sizing: border-box; font: inherit; padding: 6px 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; outline: none; background: #fff; color: var(--hub-ink); }
+            .hub-ex-selfinput:focus { border-color: #2563eb; }
+            .hub-ex-model { margin-top: 6px; }
+            .hub-ex-model summary { cursor: pointer; font-size: 14px; font-weight: 600; color: #2563eb; }
+            .hub-ex-model div { margin-top: 6px; padding: 8px 12px; border-left: 3px solid #16a34a; background: #f0fdf4; color: #15803d; border-radius: 0 8px 8px 0; }
             .hub-ex-saved { font-size: 12.5px; color: var(--hub-muted); margin: 0 0 14px; }
         </style>
         <section id="hub-exercises-view" class="hidden no-print flex-grow flex items-start justify-center relative z-20">
@@ -2552,6 +2604,7 @@ video {
 
                     <div class="hub-share hidden" id="hub-ex-share-panel">
                         <div class="hub-share-actions">
+                            <button type="button" class="hub-cta hub-cta-alt hidden" id="hub-ex-share-native">&#128228; Udost&#281;pnij</button>
                             <a class="hub-cta hub-cta-wa" id="hub-ex-share-wa" href="#" target="_blank" rel="noopener">&#128172; Wy&#347;lij wyniki na WhatsApp</a>
                             <button type="button" class="hub-cta hub-cta-alt" id="hub-ex-share-copy">&#128203; Kopiuj wyniki</button>
                         </div>
@@ -2858,6 +2911,7 @@ video {
                         "correction": "",
                         "items": [],
                         "explanation": "In używamy dla miesięcy, pór roku i lat, on dla dni i dat, a at dla godzin i konkretnych momentów.",
+                        "sections": [],
                         "links": [
                                 {
                                         "label": "Przyimki czasu IN / ON / AT (i tak ogólnie przyimki też) | ROCK YOUR ENGLISH #101",
@@ -2881,6 +2935,7 @@ video {
                         "correction": "",
                         "items": [],
                         "explanation": "Krótkie przymiotniki dostają końcówki -er/-est (young - younger - the youngest), dłuższe używają more/the most, a niektóre są nieregularne (bad - worse - the worst).",
+                        "sections": [],
                         "links": [
                                 {
                                         "label": "Stopniowanie przymiotników | ROCK YOUR ENGLISH #128",
@@ -4942,6 +4997,42 @@ video {
                 .map(function (l) { return { label: l.label, dateLabel: l.dateLabel, items: map[l.label] }; });
         }
 
+        // Notatka graficzna do zagadnienia (opcjonalne g.sections, od 2026-09-25):
+        // kolorowe karty z punktami i przykladami, tabela porownawcza, ramka-wskazowka.
+        // **tekst** w srodku = wyroznienie. Wpisy bez sections renderuja sie jak dotad.
+        function gramInline(s) {
+            return escapeHtml(s).replace(/\*\*(.+?)\*\*/g, '<strong class="hub-hl">$1</strong>');
+        }
+        function renderSections(list) {
+            if (!list || !list.length) return '';
+            return '<div class="hub-gsections">' + list.map(function (s) {
+                var tone = ' tone-' + (s.tone || 'blue');
+                var title = s.title ? '<p class="hub-gcard-title">' +
+                    (s.emoji ? '<span class="hub-gcard-emoji">' + escapeHtml(s.emoji) + '</span>' : '') +
+                    gramInline(s.title) + '</p>' : '';
+                if (s.type === 'tip') {
+                    return '<div class="hub-gtip' + tone + '">' +
+                        (s.emoji ? '<span class="hub-gtip-emoji">' + escapeHtml(s.emoji) + '</span>' : '') +
+                        '<div class="hub-gtip-body">' + (s.title ? '<p class="hub-gtip-title">' + gramInline(s.title) + '</p>' : '') +
+                        '<p class="hub-gtip-text">' + gramInline(s.text || '') + '</p></div></div>';
+                }
+                if (s.type === 'table') {
+                    return '<div class="hub-gcard' + tone + '">' + title +
+                        '<div class="hub-gtable-wrap"><table class="hub-gtable"><thead><tr>' +
+                        (s.head || []).map(function (h) { return '<th>' + gramInline(h) + '</th>'; }).join('') +
+                        '</tr></thead><tbody>' +
+                        (s.rows || []).map(function (r) {
+                            return '<tr>' + r.map(function (c) { return '<td>' + gramInline(c) + '</td>'; }).join('') + '</tr>';
+                        }).join('') + '</tbody></table></div></div>';
+                }
+                var points = (s.points && s.points.length) ? '<ul class="hub-gcard-points">' +
+                    s.points.map(function (p) { return '<li>' + gramInline(p) + '</li>'; }).join('') + '</ul>' : '';
+                var ex = (s.examples && s.examples.length) ? '<div class="hub-gcard-ex"><p class="hub-gcard-ex-label">Przykłady</p>' +
+                    s.examples.map(function (e) { return '<p class="hub-gcard-ex-line">' + gramInline(e) + '</p>'; }).join('') + '</div>' : '';
+                return '<div class="hub-gcard' + tone + '">' + title + points + ex + '</div>';
+            }).join('') + '</div>';
+        }
+
         function renderGrammar() {
             var box = el('hub-grammar-list');
             if (box) {
@@ -4980,6 +5071,7 @@ video {
                             return '<div class="hub-gram">' +
                                 topic + pair + items +
                                 (g.explanation ? '<p class="hub-gram-expl">' + escapeAndLinkify(g.explanation) + '</p>' : '') +
+                                renderSections(g.sections) +
                                 renderLinks(g.links) +
                                 '</div>';
                         }).join('');
@@ -5311,20 +5403,36 @@ video {
             return !!(ch && ch[gap] && ch[gap].length);
         }
         function exLetter(ex, i) { return ex.letters ? String.fromCharCode(65 + i) + ' ' : ''; }
+        // layout "table": text pozycji to komorki rozdzielone "|"; przy svg
+        // pierwsza kolumna jest obrazkiem, wiec komorki z lukami zaczynaja sie od 1.
+        function exCellOffset(ex) { return ex.items.some(function (it) { return it.svg; }) ? 1 : 0; }
+        function exGapColumn(ex, itIdx, gap) {
+            var cells = ex.items[itIdx].text.split('|'), seen = 0;
+            for (var c = 0; c < cells.length; c++) {
+                seen += cells[c].split('[gap]').length - 1;
+                if (gap < seen) return ex.columns[c + exCellOffset(ex)] || '';
+            }
+            return '';
+        }
         // Wynik jednego cwiczenia liczony z zapisanego stanu, nie z DOM - ten sam
         // rachunek dla ekranu i dla wiadomosci na WhatsApp.
         function exResult(exIdx) {
             var ex = EXERCISES[exIdx], st = exSt(exIdx);
             var total = 0, ok = 0, filled = 0, wrong = [], n = 0;
             ex.items.forEach(function (it, itIdx) {
-                it.answers.forEach(function (a, gap) {
+                (it.answers || []).forEach(function (a, gap) {
                     n++;
                     total++;
                     var val = st.v[itIdx + '-' + gap] || '';
                     if (String(val).trim()) filled++;
                     var good = String(val).trim() && exAccepted(a).some(function (x) { return exNorm(x) === exNorm(val); });
                     if (good) ok++;
-                    else wrong.push({ num: ex.layout === 'text' ? n : (itIdx + 1), val: String(val).trim() });
+                    else wrong.push({
+                        num: ex.layout === 'text' ? n
+                            : ex.layout === 'table' ? (itIdx + 1) + ', ' + exGapColumn(ex, itIdx, gap)
+                            : (itIdx + 1),
+                        val: String(val).trim()
+                    });
                 });
             });
             return { total: total, ok: ok, filled: filled, wrong: wrong };
@@ -5338,6 +5446,15 @@ video {
             }
             box.innerHTML = EXERCISES.map(function (ex, exIdx) {
                 var gapNo = 0;
+                // Szerokosc pola wg najdluzszej odpowiedzi w calym cwiczeniu (nie w luce),
+                // zeby dlugosc pola nie podpowiadala odpowiedzi. Stale 11 znakow ucinalo
+                // odpowiedzi typu "Does Adam sometimes watch".
+                var inputSize = 11;
+                ex.items.forEach(function (it) {
+                    (it.answers || []).forEach(function (a) {
+                        inputSize = Math.max(inputSize, Math.min(34, String(exAccepted(a)[0]).length + 2));
+                    });
+                });
                 function gapHtml(it, itIdx, i) {
                     gapNo++;
                     var num = ex.layout === 'text' ? '<span class="hub-ex-gapnum">(' + gapNo + ')</span>' : '';
@@ -5348,7 +5465,7 @@ video {
                                     escapeHtml(exLetter(ex, oi) + opt) + '</button>';
                             }).join('') + '</span>';
                     }
-                    return num + '<input type="text" class="hub-ex-input" size="11" autocomplete="off" autocapitalize="off" spellcheck="false" data-ex="' + exIdx + '" data-it="' + itIdx + '" data-gap="' + i + '">';
+                    return num + '<input type="text" class="hub-ex-input" size="' + inputSize + '" autocomplete="off" autocapitalize="off" spellcheck="false" data-ex="' + exIdx + '" data-it="' + itIdx + '" data-gap="' + i + '">';
                 }
                 function itemHtml(it, itIdx) {
                     var parts = it.text.split('[gap]');
@@ -5357,8 +5474,36 @@ video {
                     }).join('');
                 }
                 var body;
-                if (ex.layout === 'text') {
+                var isSelf = ex.layout === 'selfcheck';
+                if (isSelf) {
+                    // Do samosprawdzenia: wlasna odpowiedz (zapis lokalny, bez oceny)
+                    // i przykladowa odpowiedz pod rozwijanym paskiem.
+                    body = ex.items.map(function (it, itIdx) {
+                        return '<div class="hub-ex-self"><div class="hub-ex-self-q"><span class="hub-ex-num">' + (itIdx + 1) + '.</span>' + escapeHtml(it.text) + '</div>' +
+                            '<input type="text" class="hub-ex-selfinput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Twoja wersja..." data-self-ex="' + exIdx + '" data-it="' + itIdx + '">' +
+                            '<details class="hub-ex-model"><summary>Poka&#380; przyk&#322;adow&#261; odpowied&#378;</summary><div>' + escapeHtml(it.answer) + '</div></details></div>';
+                    }).join('');
+                } else if (ex.layout === 'text') {
                     body = '<p class="hub-ex-text">' + ex.items.map(itemHtml).join(' ') + '</p>';
+                } else if (ex.layout === 'table') {
+                    var withSvg = exCellOffset(ex) === 1;
+                    body = '<div class="hub-ex-table-wrap"><table class="hub-ex-table"><thead><tr><th></th>' +
+                        ex.columns.map(function (c) { return '<th>' + escapeHtml(c) + '</th>'; }).join('') +
+                        '</tr></thead><tbody>' +
+                        ex.items.map(function (it, itIdx) {
+                            var gi = 0;
+                            var cells = it.text.split('|').map(function (cell) {
+                                var parts = cell.split('[gap]');
+                                return '<td>' + parts.map(function (p, i) {
+                                    return escapeHtml(p.trim()) + (i < parts.length - 1 ? gapHtml(it, itIdx, gi++) : '');
+                                }).join('') + '</td>';
+                            }).join('');
+                            // svg pochodzi z hub_input.json i przeszedl walidacje buildera.
+                            return '<tr><td class="hub-ex-num">' + (itIdx + 1) + '.</td>' +
+                                (withSvg ? '<td class="hub-ex-img" aria-hidden="true">' + it.svg + '</td>' : '') +
+                                cells + '</tr>';
+                        }).join('') +
+                        '</tbody></table></div>';
                 } else {
                     body = ex.items.map(function (it, itIdx) {
                         return '<div class="hub-ex-item"><span class="hub-ex-num">' + (itIdx + 1) + '.</span>' + itemHtml(it, itIdx) + '</div>';
@@ -5371,12 +5516,13 @@ video {
                     '<summary class="hub-section-title' + (exIdx === 0 ? ' is-first' : '') + '">' + escapeHtml(ex.title || '') + '</summary>' +
                     (ex.instructions ? '<p class="hub-msg-body" style="margin-bottom:12px">' + escapeHtml(ex.instructions) + '</p>' : '') +
                     wordBox + body +
+                    (isSelf ? '' :
                     '<div class="hub-ex-actions">' +
                     '<button type="button" class="hub-link-btn" data-ex-check="' + exIdx + '">Sprawd&#378;</button>' +
                     '<button type="button" class="hub-link-btn" data-ex-show="' + exIdx + '">Poka&#380; odpowiedzi</button>' +
                     '<button type="button" class="hub-link-btn" data-ex-reset="' + exIdx + '">Wyczy&#347;&#263;</button>' +
                     '<span class="hub-ex-score" data-ex-score="' + exIdx + '"></span>' +
-                    '</div></details>';
+                    '</div>') + '</details>';
             }).join('');
 
             function gapsOf(exIdx) {
@@ -5437,6 +5583,10 @@ video {
                 });
                 if (st.checked) markCheck(exIdx);
             });
+            Array.prototype.forEach.call(box.querySelectorAll('.hub-ex-selfinput'), function (inp) {
+                var v = exSt(+inp.getAttribute('data-self-ex')).v['s' + inp.getAttribute('data-it')];
+                if (v) inp.value = v;
+            });
 
             function touched(g) {
                 var exIdx = +g.getAttribute('data-ex');
@@ -5448,6 +5598,11 @@ video {
                 refreshExShare();
             }
             box.addEventListener('input', function (e) {
+                if (e.target && e.target.classList && e.target.classList.contains('hub-ex-selfinput')) {
+                    exSt(+e.target.getAttribute('data-self-ex')).v['s' + e.target.getAttribute('data-it')] = e.target.value;
+                    exSave();
+                    return;
+                }
                 if (e.target && e.target.classList && e.target.classList.contains('hub-ex-input')) touched(e.target);
             });
             box.addEventListener('click', function (e) {
@@ -5553,12 +5708,28 @@ video {
             var num = (HUB.teacherWhatsApp || '').replace(/[^0-9]/g, '');
             wa.classList.remove('is-disabled');
             wa.setAttribute('href', 'https://wa.me/' + num + '?text=' + encodeURIComponent(buildExShareText()));
-            setExStatus('Gotowe do wysłania: ' + count(n, 'ćwiczenie', 'ćwiczenia', 'ćwiczeń') + ' z ' + EXERCISES.length + '.', false);
+            var graded = EXERCISES.filter(function (ex) { return ex.layout !== 'selfcheck'; }).length;
+            setExStatus('Gotowe do wysłania: ' + count(n, 'ćwiczenie', 'ćwiczenia', 'ćwiczeń') + ' z ' + graded + '.', false);
         }
         var exShareWired = false;
         function wireExShare() {
             if (exShareWired) return;
             exShareWired = true;
+            var nativeBtn = el('hub-ex-share-native');
+            if (nativeBtn && typeof navigator.share === 'function') {
+                nativeBtn.classList.remove('hidden');
+                nativeBtn.addEventListener('click', function () {
+                    nativeBtn.blur();
+                    if (!exStartedCount()) { setExStatus('Zrób przynajmniej jedno ćwiczenie, żeby było co wysłać.', true); return; }
+                    try {
+                        navigator.share({ text: buildExShareText() }).catch(function () {
+                            setExStatus('Udostępnianie anulowane - spróbuj WhatsApp albo Kopiuj wyniki.', false);
+                        });
+                    } catch (e) {
+                        setExStatus('Udostępnianie niedostępne - użyj WhatsApp albo Kopiuj wyniki.', false);
+                    }
+                });
+            }
             var copyBtn = el('hub-ex-share-copy');
             if (!copyBtn) return;
             copyBtn.addEventListener('click', function () {
