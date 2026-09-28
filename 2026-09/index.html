@@ -2550,24 +2550,41 @@ video {
         <!-- === HUB MODULE - END (writing/speaking view) === -->
         <!-- === HUB MODULE - START (exercises view) === -->
         <style>
-            .hub-ex-item { margin: 0 0 12px; line-height: 2.1; }
+            /* Karty cwiczen - wzor: osobne pliki z testami (future-forms.html) */
+            .hub-ex-card { background: #fff; border: 1px solid var(--hub-line); border-radius: 16px; padding: 18px 20px 16px;
+                margin: 0 0 18px; box-shadow: 0 6px 20px rgba(22,24,29,.05); }
+            .hub-ex-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; list-style: none; }
+            .hub-ex-head::-webkit-details-marker { display: none; }
+            .hub-ex-title { font-family: 'Plus Jakarta Sans', Arial, sans-serif; font-size: 17px; font-weight: 800; color: var(--hub-ink); }
+            .hub-ex-title::before { content: '\25B8'; display: inline-block; margin-right: 8px; color: var(--hub-muted); transition: transform .15s; }
+            .hub-ex-card[open] .hub-ex-title::before { transform: rotate(90deg); }
+            .hub-ex-score { font-size: 13px; font-weight: 700; color: #1e5aae; background: #e9f0fa; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+            .hub-ex-instr { color: var(--hub-muted); font-size: 14px; line-height: 1.5; margin: 10px 0 12px; }
+            .hub-ex-item { padding: 11px 0; border-top: 1px solid var(--hub-line); line-height: 1.9; font-size: 15.5px; }
+            .hub-ex-item:first-of-type { border-top: none; }
             .hub-ex-text { margin: 0 0 12px; line-height: 2.3; font-size: 15.5px; }
-            .hub-ex-num { font-weight: 700; margin-right: 6px; }
+            .hub-ex-num { font-weight: 700; color: var(--hub-muted); margin-right: 6px; }
             .hub-ex-gapnum { font-weight: 700; margin: 0 3px 0 2px; }
-            .hub-ex-input { border: none; border-bottom: 2px solid #94a3b8; background: transparent; font: inherit; text-align: center; padding: 0 4px; outline: none; max-width: 100%; }
-            .hub-ex-input:focus { border-bottom-color: #2563eb; }
-            .hub-ex-input.is-ok { border-bottom-color: #16a34a; color: #15803d; }
-            .hub-ex-input.is-bad { border-bottom-color: #dc2626; color: #b91c1c; }
-            .hub-ex-key { color: #15803d; font-size: 0.85em; margin-left: 4px; }
-            .hub-ex-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
-            .hub-ex-score { font-weight: 700; }
+            .hub-ex-hint { color: var(--hub-muted); font-size: 0.9em; }
+            .hub-ex-input { border: 1.5px solid #d6d9df; border-radius: 8px; background: #fff; color: var(--hub-ink); font: inherit;
+                padding: 2px 8px; margin: 0 3px; outline: none; max-width: 100%; box-sizing: border-box; }
+            .hub-ex-item .hub-ex-input { max-width: 12em; }
+            .hub-ex-input:focus { border-color: #1e5aae; }
+            .hub-ex-input.is-ok { border-color: #1f9254; background: #eafaf0; color: #15803d; }
+            .hub-ex-input.is-bad { border-color: #ee4352; background: #fdecec; color: #b91c1c; }
+            .hub-ex-key { color: #15803d; font-size: 0.85em; font-weight: 600; margin-left: 4px; }
+            .hub-ex-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: flex-end; margin-top: 12px; }
+            .hub-ex-btn { font: inherit; font-size: 14px; font-weight: 600; border: none; border-radius: 8px; padding: 7px 14px; cursor: pointer;
+                background: #e9f0fa; color: #1e5aae; }
+            .hub-ex-btn:hover { background: #dcebfa; }
+            .hub-ex-btn-main { background: #1e5aae; color: #fff; }
+            .hub-ex-btn-main:hover { background: #1e5aae; opacity: .9; }
             .hub-ex-box { display: flex; flex-wrap: wrap; gap: 6px 14px; border: 1px solid var(--hub-line); border-radius: 10px;
                           padding: 10px 14px; margin: 0 0 14px; font-weight: 600; }
             .hub-ex-box span { white-space: nowrap; padding: 3px 10px; border: 1px solid #cbd5e1; border-radius: 6px; background: #f8fafc; }
             .hub-ex-choice { display: inline-flex; flex-wrap: wrap; gap: 4px; vertical-align: middle; }
-            .hub-ex-opt { font: inherit; font-size: 14.5px; line-height: 1.35; padding: 2px 9px; border-radius: 8px; cursor: pointer;
-                          border: 1.5px solid #cbd5e1; background: #fff; color: var(--hub-ink); }
-            .hub-ex-opt:hover { border-color: #2563eb; }
+            .hub-ex-opt { font: inherit; font-size: 14.5px; line-height: 1.35; padding: 5px 12px; margin: 2px 0; border-radius: 8px; cursor: pointer; border: 1.5px solid #d6d9df; background: #fff; color: var(--hub-ink); }
+            .hub-ex-opt:hover { border-color: #1e5aae; }
             .hub-ex-opt.is-picked { border-color: #2563eb; background: #eff6ff; font-weight: 700; }
             .hub-ex-opt.is-ok { border-color: #16a34a; background: #f0fdf4; color: #15803d; }
             .hub-ex-opt.is-bad { border-color: #dc2626; background: #fef2f2; color: #b91c1c; text-decoration: line-through; }
@@ -2580,9 +2597,10 @@ video {
             .hub-ex-table .hub-ex-input { width: 100%; min-width: 90px; text-align: left; }
             .hub-ex-img { width: 1%; }
             .hub-ex-img svg { display: block; height: 40px; width: auto; max-width: 64px; box-shadow: 0 0 0 1px #cbd5e1; }
-            .hub-ex-self { margin: 0 0 16px; }
+            .hub-ex-self { padding: 12px 0; border-top: 1px solid var(--hub-line); }
+            .hub-ex-self:first-of-type { border-top: none; }
             .hub-ex-self-q { margin: 0 0 6px; line-height: 1.5; }
-            .hub-ex-selfinput { width: 100%; box-sizing: border-box; font: inherit; padding: 6px 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; outline: none; background: #fff; color: var(--hub-ink); }
+            .hub-ex-selfinput { width: 100%; box-sizing: border-box; font: inherit; padding: 6px 10px; border: 1.5px solid #d6d9df; border-radius: 8px; outline: none; background: #fff; color: var(--hub-ink); }
             .hub-ex-selfinput:focus { border-color: #2563eb; }
             .hub-ex-model { margin-top: 6px; }
             .hub-ex-model summary { cursor: pointer; font-size: 14px; font-weight: 600; color: #2563eb; }
@@ -6491,7 +6509,11 @@ video {
                 function itemHtml(it, itIdx) {
                     var parts = it.text.split('[gap]');
                     return parts.map(function (p, i) {
-                        return escapeHtml(p) + (i < parts.length - 1 ? gapHtml(it, itIdx, i) : '');
+                        // Nawias zaraz po luce to podpowiedz ("(rain)", "(✗ will rain)") -
+                        // wyszarzona, zeby nie mieszala sie z trescia zdania.
+                        var txt = escapeHtml(p);
+                        if (i > 0) txt = txt.replace(/^(\s*)(\([^)]*\))/, '$1<span class="hub-ex-hint">$2</span>');
+                        return txt + (i < parts.length - 1 ? gapHtml(it, itIdx, i) : '');
                     }).join('');
                 }
                 var body;
@@ -6534,16 +6556,18 @@ video {
                     ? '<div class="hub-ex-box">' + ex.wordBox.map(function (w) { return '<span>' + escapeHtml(w) + '</span>'; }).join('') + '</div>'
                     : '';
                 // Rozwiniete tylko pierwsze cwiczenie - cala lista naraz przytlacza.
-                return '<details class="hub-lesson-group"' + (exIdx === 0 ? ' open' : '') + '>' +
-                    '<summary class="hub-section-title' + (exIdx === 0 ? ' is-first' : '') + '">' + escapeHtml(ex.title || '') + '</summary>' +
-                    (ex.instructions ? '<p class="hub-msg-body" style="margin-bottom:12px">' + escapeHtml(ex.instructions) + '</p>' : '') +
+                var gapTotal = ex.items.reduce(function (s, it) { return s + (it.answers || []).length; }, 0);
+                return '<details class="hub-lesson-group hub-ex-card"' + (exIdx === 0 ? ' open' : '') + '>' +
+                    '<summary class="hub-ex-head"><span class="hub-ex-title">' + escapeHtml(ex.title || '') + '</span>' +
+                    (isSelf ? '' : '<span class="hub-ex-score" data-ex-score="' + exIdx + '" data-ex-total="' + gapTotal + '">&ndash; / ' + gapTotal + '</span>') +
+                    '</summary>' +
+                    (ex.instructions ? '<p class="hub-ex-instr">' + escapeHtml(ex.instructions) + '</p>' : '') +
                     wordBox + body +
                     (isSelf ? '' :
                     '<div class="hub-ex-actions">' +
-                    '<button type="button" class="hub-link-btn" data-ex-check="' + exIdx + '">Sprawd&#378;</button>' +
-                    '<button type="button" class="hub-link-btn" data-ex-show="' + exIdx + '">Poka&#380; odpowiedzi</button>' +
-                    '<button type="button" class="hub-link-btn" data-ex-reset="' + exIdx + '">Wyczy&#347;&#263;</button>' +
-                    '<span class="hub-ex-score" data-ex-score="' + exIdx + '"></span>' +
+                    '<button type="button" class="hub-ex-btn hub-ex-btn-main" data-ex-check="' + exIdx + '">Sprawd&#378;</button>' +
+                    '<button type="button" class="hub-ex-btn" data-ex-show="' + exIdx + '">Poka&#380; odpowiedzi</button>' +
+                    '<button type="button" class="hub-ex-btn" data-ex-reset="' + exIdx + '">Wyczy&#347;&#263;</button>' +
                     '</div>') + '</details>';
             }).join('');
 
@@ -6590,7 +6614,7 @@ video {
                 });
                 box.querySelector('[data-ex-score="' + exIdx + '"]').textContent = ok + ' / ' + gs.length;
             }
-            function setScoreEmpty(exIdx) { box.querySelector('[data-ex-score="' + exIdx + '"]').textContent = ''; }
+            function setScoreEmpty(exIdx) { var s = box.querySelector('[data-ex-score="' + exIdx + '"]'); s.textContent = '– / ' + s.getAttribute('data-ex-total'); }
 
             // Przywrocenie zapisanych odpowiedzi.
             EXERCISES.forEach(function (ex, exIdx) {
